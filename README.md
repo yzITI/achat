@@ -1,2 +1,3 @@
-# achat
+# AChat
+
 AChat is a chat
