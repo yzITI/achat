@@ -5,8 +5,7 @@ export const channel = {} // { 'channelid': { session: Set() } }
 export const session = {} // { 'sessionid': { channel: Set(), ws: WebSocket, start: Date.now(), user: 'userid' } }
 
 export function terminate (s) { // terminate session
-  if (!session[s] || session[s].terminate) return
-  session[s].terminated = True
+  if (!session[s]) return
   try { session[s].ws.close() } catch {}
   for (const c of session[s].channel) {
     if (!channel[c]?.session) continue
@@ -20,7 +19,7 @@ export function terminate (s) { // terminate session
 }
 
 export function initialize (ws) {
-  const s = random(32) // sesionid
+  const s = random(16) // sesionid
   session[s] = { channel: new Set(), ws, start: Date.now() }
   ws.on('error', () => terminate(s))
   ws.on('close', () => terminate(s))
@@ -30,16 +29,36 @@ export function initialize (ws) {
   console.log('[session] Initializing:', s)
 }
 
+export function subscribe (s, chs) { // chs = { 'sessionid': true, 'sessionid': false }
+  if (!session[s]?.ws) return
+  for (const c in chs) {
+    if (chs[c]) { // subscribe
+      session[s].channel.add(c)
+      if (!channel[c]?.session) channel[c] = { session: new Set() } 
+      channel[c].session.add(s)
+      continue
+    }
+    // unsubscribe
+    session[s].channel.delete(c)
+    if (!channel[c]?.session) continue
+    channel[c].session.delete(s)
+    if (channel[c].session.size) continue
+    delete channel[c] // clean empty
+  }
+}
+
+export function send (s, data) {
+  if (!session[s]?.ws) return
+  try { session[s].ws.send(JSON.stringify(data)) } catch {}
+}
+
 export function broadcast (c, data) { // broadcast to channel
   if (!channel[c]?.session?.size) { // check and clean
     delete channel[c]
     return
   }
-  for (const s of channel[c].session) {
-    if (!session[s].ws || session[s].terminated) continue
-    try { session[s].ws.send(JSON.stringify(data)) } catch {}
-  }
+  for (const s of channel[c].session) send(s, data)
 }
 
-export default { channel, session, initialize, terminate }
+export default { channel, session, initialize, terminate, subscribe, send, broadcast }
 

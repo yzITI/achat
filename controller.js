@@ -1,21 +1,32 @@
 import comet from './comet.js'
+import { sha256 } from './crypto.js'
 
 const handler = {}
 
-handler.subscribe = async (session, data) => {
-  console.log('This is subscribe handler')
+handler.handshake = async (s, data) => {
+  if (!data.token) return
+  comet.session[s].user = sha256(data.token)
+  comet.send(s, { type: 'Handshake', user: comet.session[s].user, startTime: data.startTime, serverTime: Date.now() })
 }
 
-handler.message = async (session, data) => {
-  console.log('This is message handler')
+handler.subscribe = async (s, data) => {
+  if (!comet.session[s].user) return
+  comet.subscribe(s, data.channel || {})
 }
 
-handler.query = async (session, data) => {
+handler.message = async (s, data) => {
+  if (!comet.session[s].user) return
+  comet.broadcast(data.channel, { channel: data.channel, msg: data.msg })
+}
+
+handler.query = async (s, data) => {
+  if (!comet.session[s].user) return
   console.log('This is query handler')
 }
 
-export function handle (session, data) {
+export function handle (s, data) {
+  if (!comet.session[s]?.ws) return
   if (!handler.hasOwnProperty(data.type)) return
-  handler[data.type](session, data)
+  handler[data.type](s, data)
 }
 
