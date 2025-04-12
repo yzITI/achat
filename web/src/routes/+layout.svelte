@@ -1,9 +1,9 @@
 <script>
-  import '../index.css'
+  import '../app.css'
 </script>
 
 <svelte:head>
-  <title>ITI</title>
+  <title>AChat</title>
 </svelte:head>
 
 <slot />
