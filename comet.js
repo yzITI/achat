@@ -1,4 +1,4 @@
-import { random } from './crypto.js'
+import { random, sha256 } from './crypto.js'
 import { handle } from './controller.js'
 
 export const channel = {} // { 'channelid': { session: Set() } }
@@ -33,6 +33,7 @@ export function subscribe (s, chs) { // chs = { 'sessionid': true, 'sessionid': 
   if (!session[s]?.ws) return
   for (const c in chs) {
     if (chs[c]) { // subscribe
+      if (c.length === 32 && c !== session[s]?.user && sha256(c) !== session[s]?.user) continue
       session[s].channel.add(c)
       if (!channel[c]?.session) channel[c] = { session: new Set() } 
       channel[c].session.add(s)

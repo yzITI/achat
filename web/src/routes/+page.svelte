@@ -1,6 +1,8 @@
 <script>
   import S from '$lib/S.svelte'
+  import '$lib/C.js'
   import PassCode from '$lib/components/PassCode.svelte'
+  import Status from '$lib/components/Status.svelte'
   import ChannelList from '$lib/components/ChannelList.svelte'
   import Chat from '$lib/components/Chat.svelte'
 </script>
@@ -10,11 +12,18 @@
     <PassCode />
   {/if}
   <div class="flex h-full">
-    <div class="w-80 h-full bg-neutral-800">
-      <ChannelList />
+    <div class="w-80 h-full">
+      <div class="h-16">
+        <Status />
+      </div>
+      <div style="height: calc(100% - 4rem)">
+        <ChannelList />
+      </div>
     </div>
-    <div class="h-full grow bg-neutral-900">
-      <Chat />
+    <div class="h-full grow">
+      {#if S.channel}
+        <Chat />
+      {/if}
     </div>
   </div>
 </div>
