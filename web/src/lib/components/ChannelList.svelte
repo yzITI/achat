@@ -2,7 +2,7 @@
   import S from '$lib/S.svelte'
   import { mdiForumOutline } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
-  const channels = { 'CHANNELID': 'Test Channel', 'CHANNELID2': 'Test2' }
+  const channels = { 'CHANNELID': 'Test Channel', 'TEST': 'Test' }
 </script>
 
 <div class="w-full h-full bg-zinc-700 overflow-y-auto overflow-x-hidden">
