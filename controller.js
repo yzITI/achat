@@ -16,7 +16,7 @@ handler.subscribe = async (s, data) => {
 
 handler.message = async (s, data) => {
   if (!comet.session[s].user) return
-  const message = { id: data.id, channel: data.channel, time: Date.now(), msg: data.msg }
+  const message = { id: data.id, channel: data.channel, user: comet.session[s].user, time: Date.now(), msg: data.msg }
   comet.broadcast(data.channel, { type: 'Message', ...message })
 }
 

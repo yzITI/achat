@@ -23,8 +23,8 @@
   }
 
   async function enter () {
-    content = ''
     message(S.channel, { type: 'markdown', content })
+    content = ''
   }
 
   function onkeydown (e) {
