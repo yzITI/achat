@@ -26,7 +26,7 @@ export function initialize (ws) {
   ws.on('message', data => {
     try { handle(s, JSON.parse(data)) } catch {}
   })
-  console.log('[session] Initializing:', s)
+  console.log('[session] Opening:', s)
 }
 
 export function subscribe (s, chs) { // chs = { 'sessionid': true, 'sessionid': false }
