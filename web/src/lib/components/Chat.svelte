@@ -1,6 +1,7 @@
 <script>
   import S from '$lib/S.svelte'
   import Input from '$lib/components/Input.svelte'
+  import Message from '$lib/components/Message.svelte'
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
@@ -9,9 +10,7 @@
   </div>
   <div class="grow overflow-x-hidden overflow-y-auto">
     {#each S.messages as m}
-      <div class="p-2 text-zinc-200">
-        <div>{m.msg.content}</div>
-      </div>
+      <Message message={m} />
     {/each}
   </div>
   <div>

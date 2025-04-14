@@ -13,7 +13,7 @@
   $effect(getStyles)
 </script>
 
-<div class="overflow-hidden rounded-full relative grid grid-cols-2" style={`height: ${size}; width: ${size};`}>
+<div class="overflow-hidden rounded relative grid grid-cols-2" style={`height: ${size}; width: ${size};`}>
   <div style={styles[1]}></div>
   <div style={styles[2]}></div>
   <div style={styles[3]}></div>

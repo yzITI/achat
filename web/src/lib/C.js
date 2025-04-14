@@ -23,7 +23,7 @@ function Handshake (data) {
 
 function Message (data) {
   if (data.channel !== S.channel) return // TODO: new message for other channels
-  S.messages.push({ id: data.id, time: data.time, msg: data.msg })
+  S.messages.push(data)
 }
 
 const handlers = { Handshake, Message }

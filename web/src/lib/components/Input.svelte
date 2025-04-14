@@ -36,8 +36,8 @@
 </script>
 
 <div>
-  <div class="border border-zinc-500 bg-zinc-700 m-3 rounded overflow-hidden">
-    <textarea class="w-full outline-none p-3" rows={rows} style="resize: none;" placeholder="Send Message" bind:value={content} onkeydown={onkeydown} />
+  <div class="border border-zinc-500 bg-zinc-700 m-3 rounded overflow-hidden has-focus:ring ring-blue-300">
+    <textarea class="group w-full outline-none p-3" rows={rows} style="resize: none;" placeholder="Send Message" bind:value={content} onkeydown={onkeydown} />
     <div class="bg-zinc-600 flex items-center justify-between">
       <div></div>
       <div>

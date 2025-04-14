@@ -7,12 +7,12 @@
   import Chat from '$lib/components/Chat.svelte'
 </script>
 
-<div class="w-full h-svh overflow-hidden bg-black text-white">
+<div class="w-full h-dvh overflow-hidden bg-black text-white">
   {#if !S.token}
     <PassCode />
   {/if}
   <div class="flex h-full">
-    <div class="w-80 h-full">
+    <div class="w-80 h-full" style="min-width: 20rem;">
       <div class="h-16">
         <Status />
       </div>
