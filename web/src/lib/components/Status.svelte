@@ -1,16 +1,18 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte'
   import { S, LS } from '$lib/S.svelte'
+  import { connect } from '$lib/C.js'
   import { mdiLogout } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
-  async function logout() {
+  function logout() {
     LS.removeItem('token')
     S.token = ''
     S.user = ''
     // S.userInfo = ''
     S.channel = ''
     S.messages = []
+    connect() // reconnect server
   }
 </script>
 
@@ -20,6 +22,8 @@
     <h3 class="text-xl ml-2 font-bold">AChat</h3>
   </div>
   <div class="flex items-center">
-    <AIcon path={mdiLogout} size="1.25rem" class="cursor-pointer" onclick={logout} />
+    <button class="opacity-90 hover:opacity-100 transition-all cursor-pointer" onclick={logout}>
+      <AIcon path={mdiLogout} size="1.25rem" />
+    </button>
   </div>
 </div>
