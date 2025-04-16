@@ -1,5 +1,6 @@
 import comet from './comet.js'
 import WebSocket, { WebSocketServer } from 'ws'
+import './model.js'
 
 const wss = new WebSocketServer({ port: 8080 })
 
