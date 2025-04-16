@@ -1,3 +1,4 @@
+import { M } from './model.js'
 import comet from './comet.js'
 import { sha256 } from './crypto.js'
 
@@ -16,8 +17,11 @@ handler.subscribe = async (s, data) => {
 
 handler.message = async (s, data) => {
   if (!comet.session[s].user) return
-  const message = { id: data.id, channel: data.channel, user: comet.session[s].user, time: Date.now(), msg: data.msg }
-  comet.broadcast(data.channel, { type: 'Message', ...message })
+  // TODO: edit existing message
+  const _id = sha256(data.random)
+  const message = { channel: data.channel, user: comet.session[s].user, time: Date.now(), msg: data.msg }
+  await M.put({ _id }, message)
+  comet.broadcast(data.channel, { type: 'Message', _id, ...message })
 }
 
 handler.query = async (s, data) => {

@@ -15,11 +15,11 @@ data = {
 
 - `handshake`: requires `token, startTime`
 - `subscribe`: requires `channel(Object)`
-- `message`: requires `id(String), channel(String), msg(Object)`
+- `message`: requires `_id|random(String), channel(String), msg(Object)`
 - `query`: TBD.
 
 ### Outbound Message
 
 - `Handshake`: `user, startTime, serverTime`
-- `Message`: `id, channel, user, msg`
+- `Message`: `_id, channel, user, msg`
 
