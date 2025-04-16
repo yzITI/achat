@@ -48,7 +48,7 @@ export const subscribe = channel => {
 }
 
 export const message = async (channel, msg) => {
-  const random = await random(20)
-  send({ type: 'message', random, channel, msg })
+  const r = await random(20)
+  send({ type: 'message', random: r, channel, msg })
 }
 
