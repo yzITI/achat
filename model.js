@@ -3,10 +3,11 @@
 import { MongoClient } from 'mongodb'
 
 const client = new MongoClient('mongodb://localhost')
+const dbName = 'achat'
 
 async function init () {
   try {
-    await client.db('achat').command({ ping: 1 })
+    await client.db(dbName).command({ ping: 1 })
     console.log('# Mongodb Ready')
   } catch {
     console.log('# Mongodb Failed')
