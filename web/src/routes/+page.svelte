@@ -5,11 +5,14 @@
   import Status from '$lib/components/Status.svelte'
   import ChannelList from '$lib/components/ChannelList.svelte'
   import Chat from '$lib/components/Chat.svelte'
+  import { fade } from 'svelte/transition'
 </script>
 
 <div class="w-full h-dvh overflow-hidden bg-black text-white">
   {#if !S.token}
-    <PassCode />
+    <div transition:fade class="fixed w-full h-full top-0 left-0 z-50">
+      <PassCode />
+    </div>
   {/if}
   <div class="flex h-full">
     <div class="w-80 h-full" style="min-width: 20rem;">
