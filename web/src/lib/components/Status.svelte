@@ -9,9 +9,9 @@
     LS.removeItem('token')
     S.token = ''
     S.user = ''
-    // S.userInfo = ''
     S.channel = ''
     S.messages = []
+    S.meta = {}
     connect() // reconnect server
   }
 </script>

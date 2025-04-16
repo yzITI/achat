@@ -6,7 +6,8 @@ export const S = $state({
   token: LS.token || '',
   user: '',
   channel: '',
-  messages: []
+  messages: [],
+  meta: {}
 })
 
 export default S
