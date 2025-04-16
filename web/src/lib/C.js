@@ -1,7 +1,7 @@
 import S from '$lib/S.svelte.js'
 import { random } from '$lib/utilities/crypto.js'
 
-const ws = new WebSocket('https://lsh.yzzx.tech/ws')
+const ws = new WebSocket('https://chat.yzzx.tech/ws')
 
 let serverTimeOffset = 0
 
