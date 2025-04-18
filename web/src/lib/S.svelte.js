@@ -7,7 +7,8 @@ export const S = $state({
   user: '',
   channel: '',
   messages: [],
-  meta: {}
+  meta: {},
+  showChannel: true
 })
 
 export default S
