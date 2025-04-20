@@ -53,7 +53,7 @@ data = {
 - `handshake`: requires `token, startTime`
 - `subscribe`: requires `channel(Object)`
 - `message`: requires `_id|random(String), userInfo(Object), channel(String), msg(Object)`
-- `query`: requires `channel(String)`, optional combination of `_id, created, time, user`.
+- `query`: requires `channel(String), query(Object)`.
 
 ### Outbound Message
 
