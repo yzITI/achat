@@ -9,7 +9,9 @@
 <div class="w-full h-full flex flex-col" style="background: #222;">
   <div class="p-2 flex items-center justify-between h-16 border-b-1 border-zinc-500" style="min-height: 4rem;">
     <div class="flex flex-row items-center">
-      <AIcon path={mdiMenu} size="1.5rem" class="m-2 cursor-pointer opacity-90 hover:opacity-100 transition-all" onclick={ () => { S.showChannel = !S.showChannel } }></AIcon>
+      <button class="m-2 cursor-pointer md:hidden" onclick={() => S.showChannel = true}>
+        <AIcon path={mdiMenu} size="1.5rem" />
+      </button>
       <div>Channel ID: {S.channel}</div>
     </div>
   </div>
