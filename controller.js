@@ -17,9 +17,18 @@ handler.subscribe = async (s, data) => {
 
 handler.message = async (s, data) => {
   if (!comet.session[s].user) return
-  // TODO: edit existing message
+  if (data._id) { // edit message
+    const m = await M.get({ _id: data._id, channel: data.channel })
+    if (!m || m.user !== comet.session[s].user) return
+    m.time = Date.now()
+    m.msg = data.msg
+    await M.put({ _id: data._id }, m)
+    comet.broadcast(data.channel, { type: 'Message', ...m })
+    return
+  }
+  // new message
   const _id = sha256(data.random)
-  const message = { channel: data.channel, user: comet.session[s].user, time: Date.now(), msg: data.msg }
+  const message = { channel: data.channel, user: comet.session[s].user, created: Date.now(), time: Date.now(), msg: data.msg }
   await M.put({ _id }, message)
   comet.broadcast(data.channel, { type: 'Message', _id, ...message })
 }
@@ -28,8 +37,8 @@ handler.query = async (s, data) => {
   if (!comet.session[s].user) return
   if (!data.channel || typeof data.channel !== 'string') return
   if (data.channel.length === 32 && data.channel !== comet.session[s]?.user && sha256(data.channel) !== comet.session[s]?.user) return
-  const query = { _id: data.query._id, channel: data.channel, time: data.query.time, created: data.query.created, user: data.query.user }
-  const raw = await M.find(JSON.parse(JSON.stringify(query)), { limit: 100 })
+  const query = { _id: data.query?._id, channel: data.channel, time: data.query?.time, created: data.query?.created, user: data.query?.user }
+  const raw = await M.find(JSON.parse(JSON.stringify(query)), { sort: { created: -1 }, limit: 100 })
   for (const m of raw) comet.send(s, { type: 'Message', ...m })
 }
 

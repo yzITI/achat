@@ -53,8 +53,8 @@ export const message = async (channel, msg) => {
   send({ type: 'message', random: r, channel, msg })
 }
 
-export const query = async q => {
-  send({ type: 'query', ...q })
+export const query = async (channel, q) => {
+  send({ type: 'query', channel, query: q })
 }
 
 window.query = query
