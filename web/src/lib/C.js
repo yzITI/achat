@@ -12,6 +12,7 @@ function Handshake (data) {
 }
 
 function Message (data) {
+  console.log(`[Message]`, data)
   if (data.channel !== S.channel) return // TODO: new message for other channels
   S.messages.push(data)
 }
@@ -51,4 +52,12 @@ export const message = async (channel, msg) => {
   const r = await random(20)
   send({ type: 'message', random: r, channel, msg })
 }
+
+export const query = async q => {
+  send({ type: 'query', ...q })
+}
+
+window.query = query
+window.message = message
+window.subscribe = subscribe
 

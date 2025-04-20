@@ -28,10 +28,7 @@ handler.query = async (s, data) => {
   if (!comet.session[s].user) return
   if (!data.channel || typeof data.channel !== 'string') return
   if (data.channel.length === 32 && data.channel !== comet.session[s]?.user && sha256(data.channel) !== comet.session[s]?.user) return
-  const timeQuery = {}
-  if (data.startTime) timeQuery.$gte = data.startTime
-  if (data.endTime) timeQuery.$lte = data.endTime
-  const query = { _id: data._id, channel: data.channel, time: timeQuery, user: data.user }
+  const query = { _id: data._id, channel: data.channel, time: data.time, created: data.created, user: data.user }
   const raw = await M.find(query, { limit: 100 })
   for (const m of raw) comet.send(s, { type: 'Message', ...m })
 }

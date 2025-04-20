@@ -26,6 +26,19 @@ AChat server does NOT care about users and channels. They are just abstraction r
 
 In these senses, AChat stands for AsynchronousChat, AutomatedChat, AgentChat, AIChat, AbstractChat, etc.
 
+## Model
+
+```js
+message {
+  _id: String, // 32 characters, hash of random
+  channel: String, // channel id
+  user: String, // 32 characters, user id
+  created: Date.now(), // timestamp of creation
+  time: Date.now(), // timestamp of last edit
+  msg: Object // message
+}
+```
+
 ## Protocol
 
 ```js
@@ -40,7 +53,7 @@ data = {
 - `handshake`: requires `token, startTime`
 - `subscribe`: requires `channel(Object)`
 - `message`: requires `_id|random(String), userInfo(Object), channel(String), msg(Object)`
-- `query`: optional combination of `_id(String), channel(String), startTime(String), endTime(String), user(String)`.
+- `query`: requires `channel(String)`, optional combination of `_id, created, time, user`.
 
 ### Outbound Message
 
