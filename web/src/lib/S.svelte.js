@@ -6,8 +6,10 @@ export const S = $state({
   token: LS.token || '',
   user: '',
   channel: '',
+  userInfo: {},
+  channelInfo: {},
   messages: [],
-  meta: {},
+  meta: { channels: { 'TEST': { name: 'Test Channel' } } },
   showChannel: true
 })
 

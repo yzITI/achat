@@ -10,6 +10,8 @@
     S.token = ''
     S.user = ''
     S.channel = ''
+    S.userInfo = {}
+    S.channelInfo = {}
     S.messages = []
     S.meta = {}
     connect() // reconnect server

@@ -1,5 +1,5 @@
 import S from '$lib/S.svelte.js'
-import { random } from '$lib/utilities/crypto.js'
+import { random, sha256 } from '$lib/utilities/crypto.js'
 
 let ws = null, serverTimeOffset = 0
 
@@ -8,7 +8,10 @@ function Handshake (data) {
   serverTimeOffset = serverTime - Date.now()
   S.user = data.user
   console.log(`[Handshake] serverTimeOffset = ${serverTimeOffset}`, data.user)
+  S.channel = S.user
+  S.channelInfo = { name: 'My Channel' }
   subscribe({ 'TEST': 1, [S.token]: 1, [S.user]: 1 })
+  query(S.token, { _id: sha256(S.token + 'META_MESSAGE') })
 }
 
 function Message (data) {
@@ -22,7 +25,7 @@ const handlers = { Handshake, Message }
 export const connect = () => {
   ws = new WebSocket('https://chat.yzzx.tech/ws')
   ws.onopen = () => { if (S.token) handshake() }
-  // TODO: reconnect
+  // TODO: auto reconnect
   ws.onclose = () => {}
   ws.onerror = () => {}
   ws.onmessage = e => {
@@ -47,10 +50,11 @@ export const subscribe = channel => {
   send({ type: 'subscribe', channel })
 }
 
-// TODO: edit message
-export const message = async (channel, msg) => {
-  const r = await random(20)
-  send({ type: 'message', random: r, channel, msg })
+export const message = (channel, msg, _id, _random) => {
+  const payload = { type: 'message', channel, msg }
+  if (_id) payload._id = _id
+  else payload.random = _random || random(20)
+  send(payload)
 }
 
 export const query = async (channel, q) => {
