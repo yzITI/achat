@@ -3,7 +3,7 @@ import { random, sha256 } from '$lib/utilities/crypto.js'
 
 let ws = null, serverTimeOffset = 0
 
-function Handshake (data) {
+async function Handshake (data) {
   const serverTime = data.serverTime + (Date.now() - data.startTime) / 2
   serverTimeOffset = serverTime - Date.now()
   S.user = data.user
@@ -11,11 +11,12 @@ function Handshake (data) {
   S.channel = S.user
   S.channelInfo = { name: 'My Channel' }
   subscribe({ 'TEST': 1, [S.token]: 1, [S.user]: 1 })
-  query(S.token, { _id: sha256(S.token + 'META_MESSAGE') })
+  query(S.token, { _id: await sha256(S.token + 'META_MESSAGE') })
 }
 
-function Message (data) {
+async function Message (data) {
   console.log(`[Message]`, data)
+  if (data._id === await sha256(S.token + 'META_MESSAGE')) S.meta = data.msg
   if (data.channel !== S.channel) return // TODO: new message for other channels
   S.messages.push(data)
 }

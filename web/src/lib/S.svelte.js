@@ -9,7 +9,7 @@ export const S = $state({
   userInfo: {},
   channelInfo: {},
   messages: [],
-  meta: { channels: { 'TEST': { name: 'Test Channel' } } },
+  meta: {},
   showChannel: true
 })
 
