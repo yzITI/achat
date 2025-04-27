@@ -1,5 +1,6 @@
 <script>
   import S from '$lib/S.svelte'
+  import { query } from '$lib/C.js'
   import { mdiForumOutline, mdiPlus } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
   import { random } from '$lib/utilities/crypto.js'
@@ -9,6 +10,7 @@
     S.channel = c
     S.messages = []
     S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
+    query(c, {})
   }
 
   function add () {

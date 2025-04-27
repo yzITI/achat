@@ -6,6 +6,11 @@
   import ChannelList from '$lib/components/ChannelList.svelte'
   import Chat from '$lib/components/Chat.svelte'
   import { fade } from 'svelte/transition'
+  let { data } = $props()
+  if (data.channel) {
+    S.channel = data.channel
+    S.channelInfo = data.channelInfo
+  }
 </script>
 
 <div class="w-full h-dvh overflow-hidden bg-black text-white">
