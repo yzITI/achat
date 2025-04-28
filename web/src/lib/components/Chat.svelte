@@ -18,6 +18,8 @@
   }
 
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
+
+  // TODO: load more messages then single request
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">

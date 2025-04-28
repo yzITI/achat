@@ -10,6 +10,7 @@
     S.channel = c
     S.messages = []
     S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
+    S.showChannel = false
     query(c, {})
   }
 
