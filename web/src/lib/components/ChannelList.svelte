@@ -19,6 +19,7 @@
     S.channel = id
     S.messages = []
     S.channelInfo = { name: 'New Channel' }
+    S.showChannel = false
   }
 </script>
 
