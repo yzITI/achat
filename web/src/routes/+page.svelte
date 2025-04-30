@@ -11,6 +11,7 @@
     S.channel = data.channel
     S.channelInfo = data.channelInfo
   }
+  if (data.token) S.token = data.token
 </script>
 
 <div class="w-full h-dvh overflow-hidden bg-black text-white">

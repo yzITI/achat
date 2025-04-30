@@ -10,7 +10,7 @@ User identity and permission are solely represented by **passcode**. **token** i
 
 ### Meta Message
 
-Meta information of user is stored in self-channel (the channel with token as channelID). The message random is `token + 'META_MESSAGE'`, which gives the message _id as the hash of this string.
+Meta information of user is stored in self-channel (the channel with token as channelID). The message random is hash of `token + 'META_MESSAGE'`, which gives the message _id as the hash of random.
 
 The message content follows the following convention:
 

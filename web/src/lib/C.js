@@ -1,6 +1,8 @@
 import S from '$lib/S.svelte.js'
 import { random, sha256 } from '$lib/utilities/crypto.js'
 
+const url = 'https://chat.yzzx.tech/ws'
+
 let ws = null, serverTimeOffset = 0
 let meta_id = ''
 
@@ -14,14 +16,17 @@ async function Handshake (data) {
     S.channelInfo = { name: 'My Channel' }
   }
   subscribe({ 'TEST': 1, [S.token]: 1, [S.user]: 1 })
-  meta_id = await sha256(S.token + 'META_MESSAGE')
+  meta_id = await sha256(await sha256(S.token + 'META_MESSAGE'))
   query(S.token, { _id: meta_id })
   query(S.channel, {}) // query current channel
 }
 
 async function Message (data) {
-  console.log(`[Message]`, data)
-  if (data._id === meta_id) S.meta = data.msg
+  if (data._id === meta_id) { // meta message
+    S.meta = data.msg
+    S.userInfo = S.meta.userInfo || {}
+    if (!S.userInfo.name) S.userInfo.name = 'User' + S.user.substring(0, 5)
+  }
   if (data.channel !== S.channel) return // TODO: new message for other channels
   for (let i = 0; i < S.messages.length; i++) {
     if (S.messages[i]._id === data._id) return S.messages[i] = data
@@ -33,7 +38,7 @@ async function Message (data) {
 const handlers = { Handshake, Message }
 
 export const connect = () => {
-  ws = new WebSocket('https://chat.yzzx.tech/ws')
+  ws = new WebSocket(url)
   ws.onopen = () => { if (S.token) handshake() }
   // TODO: auto reconnect
   ws.onclose = () => {}
