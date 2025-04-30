@@ -10,7 +10,7 @@ export const S = $state({
   channelInfo: {},
   messages: [],
   meta: {},
-  showChannel: true
+  showChannel: false
 })
 
 export default S

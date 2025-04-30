@@ -21,9 +21,9 @@
   <div class="p-6 rounded-xl flex flex-col justify-center items-center">
     <AIcon path={mdiLock} size="5rem"/>
     <h1 class="text-4xl font-bold my-4">PassCode</h1>
-    <div class="relative flex items-center overflow-hidden">
+    <div class="relative flex items-center overflow-hidden group">
       <input type="password" class="w-80 px-4 py-2 my-2 bg-neutral-700 rounded outline-none text-lg text-center transition-all focus:bg-neutral-600" placeholder="Enter your PassCode" bind:value={passcode} onkeyup={keyup} />
-      <button class="absolute rounded-full p-1 bg-neutral-500 cursor-pointer transition-all duration-500 { showHelp ? '-right-8' : 'right-2' }" onclick={() => showHelp = true}>
+      <button class="absolute rounded-full p-1 bg-neutral-500 cursor-pointer transition-all duration-300 opacity-30 group-hover:opacity-100 { showHelp ? '-right-8' : 'right-2' }" onclick={() => showHelp = true}>
         <AIcon path={mdiHelp} size="1.25rem"></AIcon>
       </button>
     </div>
