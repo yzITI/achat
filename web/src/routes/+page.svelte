@@ -35,7 +35,7 @@
     </div>
   </div>
   {#if S.showChannel}
-    <button transition:fade class="md:hidden fixed bg-black opacity-80 z-10 w-full h-dvh left-0 top-0"u onclick={() => S.showChannel = false}></button>
+    <button transition:fade class="md:hidden fixed bg-black opacity-80 z-10 w-full h-dvh left-0 top-0"u onclick={() => S.showChannel = false}>&nbsp;</button>
   {/if}
 </div>
 
