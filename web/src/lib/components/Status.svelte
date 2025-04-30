@@ -7,6 +7,7 @@
 
   function logout() {
     LS.removeItem('token')
+    LS.removeItem('userInfo')
     S.token = ''
     S.user = ''
     S.channel = ''
@@ -19,11 +20,13 @@
 </script>
 
 <div class="h-full w-full bg-zinc-700 border-b-1 border-zinc-500 p-2 flex justify-between items-center">
-  <div class="flex items-center">
+  <div class="flex items-center grow">
     <Avatar user={S.user} size="2rem" />
-    <h3 class="text-xl ml-2 font-bold">AChat</h3>
+    <div class="grow">
+      <input class="font-bold mx-2 px-1 block outline-none text-lg w-full" placeholder="Nickname" bind:value={S.userInfo.name}>
+    </div>
   </div>
-  <div class="flex items-center">
+  <div class="flex items-center ml-4">
     <button class="opacity-90 hover:opacity-100 transition-all cursor-pointer" onclick={logout}>
       <AIcon path={mdiLogout} size="1.25rem" />
     </button>

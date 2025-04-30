@@ -11,7 +11,7 @@
     </div>
     <div class="ml-2">
       <div class="flex items-center">
-        <b>Unknown</b>
+        <b>{message.msg?.userInfo?.name || ''}</b>
         <div class="text-sm text-zinc-400 ml-2">{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</div>
       </div>
       <div class="">{message.msg.content}</div>

@@ -23,7 +23,7 @@
   }
 
   async function enter () {
-    message(S.channel, { type: 'markdown', content })
+    message(S.channel, { type: 'markdown', content, userInfo: S.userInfo })
     content = ''
   }
 
