@@ -9,7 +9,8 @@
     if (S.channel === c) return
     S.channel = c
     S.messages = []
-    S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
+    if (c === S.user) S.channelInfo = { name: 'My Channel' }
+    else S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
     S.showChannel = false
     query(c, {})
   }
@@ -31,6 +32,10 @@
         <AIcon path={mdiPlus}></AIcon>
       </button>
     </div>
+    <button class={'w-full flex items-center p-2 transition-all hover:bg-zinc-600 hover:text-zinc-100 cursor-pointer ' + (S.channel === S.user ? 'bg-zinc-600 text-zinc-100' : 'bg-zinc-700 text-zinc-200')} onclick={() => select(S.user)}>
+      <AIcon path={mdiForumOutline} size="1.5rem" />
+      <div class="ml-2 whitespace-nowrap">My Channel</div>
+    </button>
     {#each Object.keys(S.meta?.channels || {}) as c}
       <button class={'w-full flex items-center p-2 transition-all hover:bg-zinc-600 hover:text-zinc-100 cursor-pointer ' + (S.channel === c ? 'bg-zinc-600 text-zinc-100' : 'bg-zinc-700 text-zinc-200')} onclick={() => select(c)}>
         <AIcon path={mdiForumOutline} size="1.5rem" />
