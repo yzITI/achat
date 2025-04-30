@@ -15,7 +15,8 @@ async function Handshake (data) {
     S.channel = S.user
     S.channelInfo = { name: 'My Channel' }
   }
-  subscribe({ 'TEST': 1, [S.token]: 1, [S.user]: 1 })
+  if (!S.userInfo?.name) S.userInfo = { name: 'User' + S.user.substring(0, 5) }
+  subscribe({ [S.token]: 1, [S.user]: 1 })
   meta_id = await sha256(await sha256(S.token + 'META_MESSAGE'))
   query(S.token, { _id: meta_id })
   query(S.channel, {}) // query current channel
