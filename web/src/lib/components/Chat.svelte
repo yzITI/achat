@@ -29,7 +29,7 @@
   function scrollToBottom () {
     chatContainer.scrollTo({
       top: chatContainer.scrollHeight,
-      behavior: 'smooth'
+      behavior: (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 400) ? 'smooth' : 'instant'
     })
   }
   const debouncedScrollToBottom = debounce(scrollToBottom, 100)
