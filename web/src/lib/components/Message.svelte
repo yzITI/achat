@@ -8,11 +8,11 @@
     default: () => import('$lib/components/MsgDefault.svelte')
   }
 
-  let component = $state()
+  let Component = $state()
   onMount(async () => {
     let loader = loaders[message.msg?.type]
     if (!loader) loader = loaders.default
-    component = await loader().then(r => r.default)
+    Component = await loader().then(r => r.default)
   })
 </script>
 
@@ -27,7 +27,7 @@
         <div class="text-sm text-zinc-400 ml-2">{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</div>
       </div>
       <div>
-        <svelte:component this={component} msg={message.msg} />
+        <Component msg={message.msg} />
       </div>
     </div>
   </div>
