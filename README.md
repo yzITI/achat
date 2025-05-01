@@ -24,7 +24,7 @@ In AChat, what you know (token, channelID) solely defines who you are. It's not 
 
 AChat server does NOT care about users and channels. They are just abstraction represented by their IDs, stored along with messages. Thus, there is no user registration, no channel creation or deletion.
 
-In these senses, AChat stands for AsynchronousChat, AutomatedChat, AgentChat, AIChat, AbstractChat, etc.
+In these senses, AChat stands for AnonymousChat, AutomatedChat, AgentChat, AIChat, AbstractChat, etc.
 
 ## Model
 
