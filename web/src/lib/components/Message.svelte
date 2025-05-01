@@ -10,8 +10,7 @@
 
   let Component = $state()
   onMount(async () => {
-    let loader = loaders[message.msg?.type]
-    if (!loader) loader = loaders.default
+    const loader = loaders[message.msg?.type] || loaders.default
     Component = await loader().then(r => r.default)
   })
 </script>
