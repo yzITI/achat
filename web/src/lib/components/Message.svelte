@@ -1,7 +1,19 @@
 <script>
+  import { onMount } from 'svelte'
   import Avatar from '$lib/components/Avatar.svelte'
   import moment from 'moment'
   const { message } = $props()
+  const loaders = {
+    markdown: () => import('$lib/components/MsgMarkdown.svelte'),
+    default: () => import('$lib/components/MsgDefault.svelte')
+  }
+
+  let component = $state()
+  onMount(async () => {
+    let loader = loaders[message.msg?.type]
+    if (!loader) loader = loaders.default
+    component = await loader().then(r => r.default)
+  })
 </script>
 
 <div class="p-2 border-t-1 border-zinc-600 text-zinc-200">
@@ -14,7 +26,9 @@
         <b>{message.msg?.userInfo?.name || ''}</b>
         <div class="text-sm text-zinc-400 ml-2">{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</div>
       </div>
-      <div class="">{message.msg.content}</div>
+      <div>
+        <svelte:component this={component} msg={message.msg} />
+      </div>
     </div>
   </div>
 </div>

@@ -27,6 +27,12 @@ async function Message (data) {
     S.meta = data.msg
     S.userInfo = S.meta.userInfo || {}
     if (!S.userInfo.name) S.userInfo.name = 'User' + S.user.substring(0, 5)
+    const channels = {}
+    for (const c in S.meta.channels) {
+      if (c === S.token || c === S.user) continue
+      channels[c] = 1
+    }
+    subscribe(channels)
   }
   if (data.channel !== S.channel) return // TODO: new message for other channels
   for (let i = 0; i < S.messages.length; i++) {

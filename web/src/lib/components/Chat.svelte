@@ -8,6 +8,8 @@
   import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
+  let chatContainer = $state(), reachBottom = true
+
   async function updateChannel (button) {
     if (!button && !S.meta?.channels?.[S.channel]) return
     if (!S.channelInfo?.name || !S.channelInfo.name.match(/\S/)) return
@@ -20,7 +22,24 @@
 
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
 
-  // TODO: load more messages than single request
+  function onscroll (e) {
+    reachBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10
+  }
+
+  function scrollToBottom () {
+    chatContainer.scrollTo({
+      top: chatContainer.scrollHeight,
+      behavior: 'smooth'
+    })
+  }
+  const debouncedScrollToBottom = debounce(scrollToBottom, 100)
+
+  $effect(() => {
+    S.messages[S.messages.length - 1]
+    if (reachBottom) debouncedScrollToBottom()
+  })
+
+  // TODO: infinite loading message
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
@@ -40,9 +59,11 @@
       {/if}
     </div>
   </div>
-  <div class="grow overflow-x-hidden overflow-y-auto">
-    {#each S.messages as m}
-      <Message message={m} />
+  <div class="grow overflow-x-hidden overflow-y-auto" style="scrollbar-color: #666 #222;" bind:this={chatContainer} {onscroll}>
+    {#each S.messages as message}
+      {#key message._id + message.time}
+        <Message {message} />
+      {/key}
     {/each}
   </div>
   <div>
