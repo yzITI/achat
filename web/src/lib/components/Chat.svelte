@@ -42,10 +42,7 @@
   })
 
   function share () {
-    navigator.share({
-      title: 'AChat Channel ' + S.channelInfo.name,
-      url: window.location.href.replace(/\?.*$/, `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`)
-    })
+    navigator.share({ url: window.location.href.replace(/\?.*$/, `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`) })
   }
 
   // TODO: infinite loading message
