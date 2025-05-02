@@ -1,4 +1,4 @@
-import S from '$lib/S.svelte.js'
+import { S, M } from '$lib/S.svelte.js'
 import { random, sha256 } from '$lib/utilities/crypto.js'
 
 const url = 'https://chat.yzzx.tech/ws'
@@ -33,8 +33,12 @@ async function Message (data) {
       channels[c] = 1
     }
     subscribe(channels)
+    return M.refreshChannelList()
   }
-  if (data.channel !== S.channel) return // TODO: new message for other channels
+  if (data.channel !== S.channel) {
+    S.channelUnread[data.channel] = 1
+    return M.refreshChannelList()
+  }
   for (let i = 0; i < S.messages.length; i++) {
     if (S.messages[i]._id === data._id) return S.messages[i] = data
     if (S.messages[i].created > data.created) return S.messages.splice(i, 0, data)

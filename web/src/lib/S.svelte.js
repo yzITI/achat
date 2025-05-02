@@ -10,7 +10,12 @@ export const S = $state({
   channelInfo: {},
   messages: [],
   meta: {},
-  showChannel: false
+  showChannel: false, // show channel list on mobile
+  channelUnread: {} // for new message
 })
+
+export const M = {
+  refreshChannelList: () => {}
+}
 
 export default S

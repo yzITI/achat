@@ -17,6 +17,7 @@
     S.channelInfo = {}
     S.messages = []
     S.meta = {}
+    S.channelUnread = {}
     connect() // reconnect server
   }
 

@@ -5,7 +5,7 @@
   import { sha256 } from '$lib/utilities/crypto.js'
   import Input from '$lib/components/Input.svelte'
   import Message from '$lib/components/Message.svelte'
-  import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit } from '@mdi/js'
+  import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit, mdiShare, mdiHomeAccount } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
   let chatContainer = $state(), reachBottom = true
@@ -22,8 +22,9 @@
 
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
 
-  function onscroll (e) {
+  function onscroll () {
     reachBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10
+    if (reachBottom) S.channelUnread[S.channel] = 0
   }
 
   function scrollToBottom () {
@@ -31,6 +32,7 @@
       top: chatContainer.scrollHeight,
       behavior: (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 400) ? 'smooth' : 'instant'
     })
+    S.channelUnread[S.channel] = 0
   }
   const debouncedScrollToBottom = debounce(scrollToBottom, 100)
 
@@ -38,6 +40,13 @@
     S.messages[S.messages.length - 1]
     if (reachBottom) debouncedScrollToBottom()
   })
+
+  function share () {
+    navigator.share({
+      title: 'AChat Channel ' + S.channelInfo.name,
+      url: window.location.href.replace(/\?.*$/, `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`)
+    })
+  }
 
   // TODO: infinite loading message
 </script>
@@ -48,11 +57,14 @@
       <button class="m-2 cursor-pointer md:hidden" onclick={() => S.showChannel = true}>
         <AIcon path={mdiMenu} size="1.5rem" />
       </button>
-      <AIcon path={mdiForumOutline} size="1.5rem" class="m-2" />
-      <input class="block grow bg-transparent outline-none px-2 font-bold" bind:value={S.channelInfo.name} oninput={() => debouncedUpdateChannel()} placeholder="Untitled"/>
+      <AIcon path={S.channel === S.user ? mdiHomeAccount : mdiForumOutline} size="1.5rem" class="m-2" />
+      <input class="block grow bg-transparent outline-none px-2 font-bold" bind:value={S.channelInfo.name} oninput={() => debouncedUpdateChannel()} placeholder="Untitled" readonly={S.channel === S.user}/>
     </div>
-    <div>
+    <div class="flex items-center">
       {#if S.channel !== S.user && S.channel !== S.token}
+        <button class="p-1 cursor-pointer" onclick={share}>
+          <AIcon path={mdiShare} size="1.25rem" />
+        </button>
         <button class="p-1 cursor-pointer" onclick={() => updateChannel(true)}>
           <AIcon path={S.meta?.channels?.[S.channel] ? mdiLocationExit : mdiLocationEnter} size="1.25rem" />
         </button>
