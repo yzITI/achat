@@ -15,7 +15,7 @@ export function terminate (s) { // terminate session
   }
   const u = session[s]?.user // may be used in the future
   delete session[s]
-  console.log('[session] Closing:', s)
+  console.log('# [session] Closing:', s)
 }
 
 export function initialize (ws) {
@@ -26,7 +26,7 @@ export function initialize (ws) {
   ws.on('message', data => {
     try { handle(s, JSON.parse(data)) } catch {}
   })
-  console.log('[session] Opening:', s)
+  console.log('# [session] Opening:', s)
 }
 
 export function subscribe (s, chs) { // chs = { 'sessionid': true, 'sessionid': false }
