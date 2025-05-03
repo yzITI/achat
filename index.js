@@ -1,5 +1,4 @@
 // AChat Core
-console.log('Starting core #...')
 import './core/index.js'
 
 // AChat File Server
