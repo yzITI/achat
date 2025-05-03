@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte'
   import S from '$lib/S.svelte'
   import { message } from '$lib/C.js'
   import { debounce } from '$lib/utilities/utils.js'
@@ -9,6 +10,9 @@
   import { AIcon } from 'ace.svelte'
 
   let chatContainer = $state(), reachBottom = true
+  let top = $state()
+  const observer = new IntersectionObserver(loadMore, { threshold: 1 })
+  onMount(() => { observer.observe(top) })
 
   async function updateChannel (button) {
     if (!button && !S.meta?.channels?.[S.channel]) return
@@ -42,10 +46,13 @@
   })
 
   function share () {
-    navigator.share({ url: window.location.href.replace(/\?.*$/, `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`) })
+    const url = window.location.href.replace(/\?.*$/, '') + `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`
+    navigator.share({ url, title: `AChat | Channel ${S.channelInfo.name}` })
   }
 
-  // TODO: infinite loading message
+  function loadMore () {
+    // TODO: load more messages
+  }
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
@@ -69,6 +76,7 @@
     </div>
   </div>
   <div class="grow overflow-x-hidden overflow-y-auto" style="scrollbar-color: #666 #222;" bind:this={chatContainer} {onscroll}>
+    <div bind:this={top}></div>
     {#each S.messages as message}
       {#key message._id + message.time}
         <Message {message} />
