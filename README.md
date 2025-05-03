@@ -28,9 +28,8 @@ In these senses, AChat stands for AnonymousChat, AutomatedChat, AgentChat, AICha
 
 ## How?
 
-In `index.js`, you can selectively start the following AChat components:
+In this repository, there are some components of AChat:
 
 - [AChat Core](./core): The core service of AChat.
-- [AChat Web](./web): AChat Web client. Needs to build the web first.
-- [AChat File](./file): AChat File service.
+- [AChat Web](./web): AChat Web client.
 
