@@ -1,6 +1,12 @@
 # AChat Web
 
-This is *a* client for AChat Server.
+This is *a* client for AChat.
+
+## Build
+
+```
+npm i && npm run build
+```
 
 ## Convention
 
