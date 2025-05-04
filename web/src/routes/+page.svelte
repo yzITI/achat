@@ -5,6 +5,7 @@
   import Status from '$lib/components/Status.svelte'
   import ChannelList from '$lib/components/ChannelList.svelte'
   import Chat from '$lib/components/Chat.svelte'
+  import Cover from '$lib/components/Cover.svelte'
   import { fade } from 'svelte/transition'
   let { data } = $props()
   if (data.channel) {
@@ -32,6 +33,8 @@
     <div class="h-full grow z-0">
       {#if S.channel}
         <Chat />
+      {:else}
+        <Cover />
       {/if}
     </div>
   </div>

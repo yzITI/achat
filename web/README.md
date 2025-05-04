@@ -36,7 +36,7 @@ msg { // meta message
     avatar: String // user avatar URL
   },
   channels: {
-    [channelID]: {
+    [channelKey]: {
       name: String // channel name
     },
     ...

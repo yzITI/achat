@@ -7,6 +7,7 @@ export const S = $state({
   token: '',
   user: '',
   channel: '',
+  channelKey: '',
   userInfo: {},
   channelInfo: {},
   messages: [],

@@ -1,7 +1,7 @@
 <script>
   import { S, M } from '$lib/S.svelte'
   import { query } from '$lib/C.js'
-  import { mdiForumOutline, mdiPlus, mdiHomeAccount } from '@mdi/js'
+  import { mdiForumOutline, mdiPlus } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
   import { random } from '$lib/utilities/crypto.js'
 
@@ -35,9 +35,6 @@
     <div class="font-bold m-2 flex items-center justify-between">
       <h3>Channels</h3>
       <div class="flex items-center">
-        <button class="cursor-pointer mx-2 transition-all text-zinc-400 hover:text-zinc-300 {(S.channelUnread['~' + S.user] ? 'text-white' : '')}" onclick={() => select('~' + S.user)}>
-          <AIcon path={mdiHomeAccount} size="1.25rem"></AIcon>
-        </button>
         <button class="transition-all cursor-pointer hover:rotate-360" onclick={add}>
           <AIcon path={mdiPlus}></AIcon>
         </button>
