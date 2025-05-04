@@ -12,7 +12,11 @@ npm i && npm run build
 
 ### User Identity
 
-User identity and permission are solely represented by **passcode**. **token** is the hash of passcode, and **userID** is the hash of token.
+User identity and permission are solely represented by **passcode**, which can be arbitrary length. Each `->` below means HASH.
+
+```
+passcode -> key -> token -> userID
+```
 
 ### Meta Message
 
