@@ -57,7 +57,7 @@
         <AIcon path={mdiPencil} size="1rem" />
       </button>
     {/if}
-    {#if message.user === S.user}
+    {#if message.msg?.type !== 'delete' && message.user === S.user}
       <button class="p-1 hover:text-white cursor-pointer" onclick={deleteMessage}>
         <AIcon path={mdiTrashCanOutline} size="1rem" />
       </button>

@@ -15,7 +15,8 @@ export const S = $state({
 })
 
 export const M = {
-  refreshChannelList: () => {}
+  refreshChannelList: () => {},
+  editMessage: () => {}
 }
 
 export default S
