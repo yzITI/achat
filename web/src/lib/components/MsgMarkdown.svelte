@@ -28,6 +28,6 @@
   const html = parse()
 </script>
 
-<div class="prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400" bind:this={el}>
+<div class="w-full prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400" bind:this={el} style="max-width: 100%;">
   {@html html}
 </div>

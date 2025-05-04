@@ -33,20 +33,20 @@
     <div class="p-2">
       <Avatar user={message.user} size="2rem" />
     </div>
-    <div class="ml-2">
+    <div class="ml-2 grow">
       <div class="flex items-center">
         <b>{message.msg?.userInfo?.name || ''}</b>
-        <div class="relative flex items-center ml-2 text-sm text-zinc-400 select-none whitespace-nowrap">
+        <div class="relative flex items-center ml-2 text-xs text-zinc-400 select-none whitespace-nowrap">
           <code>{moment(message.created).format('YYYY-MM-DD HH:mm:ss')}</code>
           <div class="absolute transition-all opacity-100 hover:opacity-0 flex items-center" style="background: #222;">
             <code>{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</code>
             {#if message.created !== message.time}
-              <AIcon path={mdiPencil} size="0.875rem" class="ml-2 text-zinc-400" />
+              <AIcon path={mdiPencil} size="0.75rem" class="ml-1 text-zinc-400" />
             {/if}
           </div>
         </div>
       </div>
-      <div>
+      <div class="w-full">
         <Component msg={message.msg} />
       </div>
     </div>
