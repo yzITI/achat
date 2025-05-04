@@ -33,7 +33,7 @@ export function subscribe (s, chs) { // chs = { 'sessionid': true, 'sessionid': 
   if (!session[s]?.ws) return
   for (const c in chs) {
     if (chs[c]) { // subscribe
-      if (c.length === 32 && c !== session[s]?.user && sha256(c) !== session[s]?.user) continue
+      if (c[0] === '~' && c !== '~' + session[s]?.user) return
       session[s].channel.add(c)
       if (!channel[c]?.session) channel[c] = { session: new Set() } 
       channel[c].session.add(s)

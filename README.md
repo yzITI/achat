@@ -9,7 +9,7 @@ AChat is a minimalist chat platform. It follows a minimal set of rules that supp
 1. *Users* send *messages* in *channels*. Direct messages are just a channel with two users.
 2. *Token* solely defines a user. UserID is the hash of the token. As long as you know the token, you ARE the corresponding user.
 3. *ChannelID* solely defines a channel. Knowing the channelID, any user can subscribe, query and message in any channel, except the special ones:
-  - *Special channels* have 32 characters long IDs. User can only subscribe or query these channels when the channel ID is equal to the userID or the token. Therefore, message history in special channels can be used to store user's meta information.
+  - *Special channels* have channelID starts with `~`. User can only subscribe or query these channels when the channelID is equal to the `~userID`.
 4. *Message* is the only thing stored on the server. Real-time message will be broadcast to online users subscribing the channel, and stored in database for query.
 
 That's it. AChat server is only responsible for the message passing. Any design on message structure, encryption/decryption, and user experience is up to the client.

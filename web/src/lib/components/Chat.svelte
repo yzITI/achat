@@ -61,11 +61,11 @@
       <button class="m-2 cursor-pointer md:hidden" onclick={() => S.showChannel = true}>
         <AIcon path={mdiMenu} size="1.5rem" />
       </button>
-      <AIcon path={S.channel === S.user ? mdiHomeAccount : mdiForumOutline} size="1.5rem" class="m-2" />
+      <AIcon path={S.channel === '~' + S.user ? mdiHomeAccount : mdiForumOutline} size="1.5rem" class="m-2" />
       <input class="block grow bg-transparent outline-none px-2 font-bold" bind:value={S.channelInfo.name} oninput={() => debouncedUpdateChannel()} placeholder="Untitled" readonly={S.channel === S.user}/>
     </div>
     <div class="flex items-center">
-      {#if S.channel !== S.user && S.channel !== S.token}
+      {#if S.channel !== '~' + S.user && S.channel !== S.token}
         <button class="p-1 cursor-pointer" onclick={share}>
           <AIcon path={mdiShare} size="1.25rem" />
         </button>

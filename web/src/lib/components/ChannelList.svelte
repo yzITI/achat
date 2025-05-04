@@ -9,7 +9,7 @@
     if (S.channel === c) return
     S.channel = c
     S.messages = []
-    if (c === S.user) S.channelInfo = { name: 'My Channel' }
+    if (c === '~' + S.user) S.channelInfo = { name: 'My Channel' }
     else S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
     S.showChannel = false
     query(c, {})
@@ -35,7 +35,7 @@
     <div class="font-bold m-2 flex items-center justify-between">
       <h3>Channels</h3>
       <div class="flex items-center">
-        <button class="cursor-pointer mx-2 transition-all text-zinc-400 hover:text-zinc-300 {(S.channelUnread[S.user] ? 'text-white' : '')}" onclick={() => select(S.user)}>
+        <button class="cursor-pointer mx-2 transition-all text-zinc-400 hover:text-zinc-300 {(S.channelUnread['~' + S.user] ? 'text-white' : '')}" onclick={() => select('~' + S.user)}>
           <AIcon path={mdiHomeAccount} size="1.25rem"></AIcon>
         </button>
         <button class="transition-all cursor-pointer hover:rotate-360" onclick={add}>
