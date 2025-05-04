@@ -36,7 +36,7 @@
         <h3 class="font-bold text-lg">What's PassCode?</h3>
         <p>PassCode is your identity and permission in AChat. Think about it as username + password.</p>
         <p>Your passcode should be something only you know (secret) and something others would not use (unique). <b>Don't forget it!</b></p>
-        <p class="my-2"><span class="italic">What the observer knows is inseparable from what the observer is.</span> (Wojciech H. Zurek)</p>
+        <p class="my-2 text-zinc-400"><span class="italic">What the observer knows is inseparable from what the observer is.</span> (Wojciech H. Zurek)</p>
       </div>
     </AExpand>
   </div>
