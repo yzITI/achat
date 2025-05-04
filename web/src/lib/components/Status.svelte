@@ -8,11 +8,8 @@
   import { AIcon } from 'ace.svelte'
 
   function logout() {
-    LS.removeItem('token')
-    LS.removeItem('userInfo')
-    S.token = ''
-    S.user = ''
-    S.channel = ''
+    LS.removeItem('userKey')
+    S.userKey = S.token = S.user = S.channel = ''
     S.userInfo = {}
     S.channelInfo = {}
     S.messages = []

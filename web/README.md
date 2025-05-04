@@ -15,8 +15,12 @@ npm i && npm run build
 User identity and permission are solely represented by **passcode**, which can be arbitrary length. Each `->` below means HASH.
 
 ```
-passcode -> key -> token -> userID
+passcode -> userKey -> token -> userID
 ```
+
+### End-to-end Encryption
+
+AChat Web use AES as E2E encryption algorithm. For any non-special channel, the channelID will be the hash of the AES key.
 
 ### Meta Message
 

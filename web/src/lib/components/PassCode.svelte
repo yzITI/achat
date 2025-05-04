@@ -6,10 +6,18 @@
   import { handshake } from '$lib/C.js'
 
   let passcode = $state(''), showHelp = $state(false)
-  async function enter () {
-    S.token = await sha256(passcode)
-    LS.token = S.token
+
+  async function login () {
+    S.userKey = LS.userKey
+    S.token = await sha256(S.userKey)
     handshake()
+  }
+
+  if (LS.userKey) login() // auto login
+
+  async function enter () {
+    LS.userKey = await sha256(passcode)
+    login()
   }
   
   function keyup (e) {
