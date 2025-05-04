@@ -1,11 +1,16 @@
 <script>
   import { onMount } from 'svelte'
+  import { S, M } from '$lib/S.svelte'
+  import { message as Cmessage } from '$lib/C.js'
   import Avatar from '$lib/components/Avatar.svelte'
+  import { mdiTrashCanOutline, mdiPencil } from '@mdi/js'
+  import { AIcon } from 'ace.svelte'
   import moment from 'moment'
   const { message } = $props()
   const loaders = {
-    markdown: () => import('$lib/components/MsgMarkdown.svelte'),
-    default: () => import('$lib/components/MsgDefault.svelte')
+    default: () => import('$lib/components/MsgDefault.svelte'),
+    delete: () => import('$lib/components/MsgDelete.svelte'),
+    markdown: () => import('$lib/components/MsgMarkdown.svelte')
   }
 
   let Component = $state()
@@ -13,9 +18,17 @@
     const loader = loaders[message.msg?.type] || loaders.default
     Component = await loader().then(r => r.default)
   })
+
+  function deleteMessage() {
+    Cmessage(S.channel, { type: 'delete', userInfo: S.userInfo }, message._id)
+  }
+
+  function editMessage() {
+    M.editMessage(message)
+  }
 </script>
 
-<div class="p-2 border-t-1 border-zinc-600 text-zinc-200">
+<div class="p-2 border-t-1 border-zinc-600 text-zinc-200 group relative overflow-hidden">
   <div class="flex items-start">
     <div class="p-2">
       <Avatar user={message.user} size="2rem" />
@@ -23,11 +36,31 @@
     <div class="ml-2">
       <div class="flex items-center">
         <b>{message.msg?.userInfo?.name || ''}</b>
-        <div class="text-sm text-zinc-400 ml-2">{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</div>
+        <div class="relative flex items-center ml-2 text-sm text-zinc-400 select-none whitespace-nowrap">
+          <code>{moment(message.created).format('YYYY-MM-DD HH:mm:ss')}</code>
+          <div class="absolute transition-all opacity-100 hover:opacity-0 flex items-center" style="background: #222;">
+            <code>{moment(message.time).format('YYYY-MM-DD HH:mm:ss')}</code>
+            {#if message.created !== message.time}
+              <AIcon path={mdiPencil} size="0.875rem" class="ml-2 text-zinc-400" />
+            {/if}
+          </div>
+        </div>
       </div>
       <div>
         <Component msg={message.msg} />
       </div>
     </div>
+  </div>
+  <div class="transition-all absolute right-1 -top-6 group-hover:top-1 flex items-center text-zinc-400 bg-zinc-800 rounded">
+    {#if message.msg?.type === 'markdown' && message.user === S.user}
+      <button class="p-1 hover:text-white cursor-pointer" onclick={editMessage}>
+        <AIcon path={mdiPencil} size="1rem" />
+      </button>
+    {/if}
+    {#if message.user === S.user}
+      <button class="p-1 hover:text-white cursor-pointer" onclick={deleteMessage}>
+        <AIcon path={mdiTrashCanOutline} size="1rem" />
+      </button>
+    {/if}
   </div>
 </div>
