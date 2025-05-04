@@ -1,9 +1,8 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte'
   import { S, LS } from '$lib/S.svelte'
-  import { connect, message } from '$lib/C.js'
+  import { connect, updateMeta } from '$lib/C.js'
   import { debounce } from '$lib/utilities/utils.js'
-  import { sha256 } from '$lib/utilities/crypto.js'
   import { mdiLogout } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
@@ -21,7 +20,7 @@
   async function updateUserInfo () {
     S.meta.userInfo = JSON.parse(JSON.stringify(S.userInfo))
     S.meta.type = 'meta'
-    message(S.token, JSON.parse(JSON.stringify(S.meta)), undefined, await sha256(S.token + 'META_MESSAGE'))
+    updateMeta()
   }
   const debouncedUpdateUserInfo = debounce(updateUserInfo, 1000)
 </script>

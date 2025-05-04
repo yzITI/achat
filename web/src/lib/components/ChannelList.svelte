@@ -1,30 +1,30 @@
 <script>
   import { S, M } from '$lib/S.svelte'
-  import { query } from '$lib/C.js'
+  import { query, subscribe } from '$lib/C.js'
   import { mdiForumOutline, mdiPlus } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
-  import { random } from '$lib/utilities/crypto.js'
+  import { random } from '$lib/C.js'
 
   function select (c) {
     if (S.channel === c) return
     S.channel = c
     S.messages = []
-    if (c === '~' + S.user) S.channelInfo = { name: 'My Channel' }
-    else S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
+    S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
     S.showChannel = false
+    subscribe({ [c]: 1 })
     query(c, {})
   }
 
   function add () {
-    const id = random(12)
-    S.channel = id
+    S.channel = random(12)
     S.messages = []
     S.channelInfo = { name: 'New Channel' }
     S.showChannel = false
+    subscribe({ [S.channel]: 1 })
   }
 
-  let chatIDs = $state([])
-  M.refreshChannelList = () => chatIDs = Object.keys(S.meta?.channels || {}).sort((a, b) => {
+  let chats = $state([])
+  M.refreshChannelList = () => chats = Object.keys(S.meta?.channels || {}).sort((a, b) => {
     return (Number(S.channelUnread[b] || 0) - Number(S.channelUnread[a] || 0)) || (S.meta.channels[a].name < S.meta.channels[b].name ? -1 : 1)
   })
   M.refreshChannelList()
@@ -40,7 +40,7 @@
         </button>
       </div>
     </div>
-    {#each chatIDs as c}
+    {#each chats as c}
       <button class={'w-full flex items-center p-2 transition-all hover:bg-zinc-600 hover:text-zinc-100 cursor-pointer ' + (S.channel === c ? 'bg-zinc-600 text-zinc-100 ' : 'bg-zinc-700 text-zinc-200 ') + (S.channelUnread[c] ? 'font-bold' : '')} onclick={() => select(c)}>
         <AIcon path={mdiForumOutline} size="1.5rem" />
         <div class="ml-2 whitespace-nowrap">{S.meta.channels[c].name}</div>

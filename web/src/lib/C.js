@@ -1,24 +1,38 @@
+// This interface will transform channelKey into channelID
+// all `channel` exposed by this interface is channelKey
 import { S, M } from '$lib/S.svelte.js'
-import { random, sha256 } from '$lib/utilities/crypto.js'
+import * as sdk from '$lib/../../../sdk/browser.js'
 
 const url = 'https://chat.yzzx.tech/ws'
-
-let ws = null, serverTimeOffset = 0
 let meta_id = ''
 
-async function Handshake (data) {
-  const serverTime = data.serverTime + (Date.now() - data.startTime) / 2
-  serverTimeOffset = serverTime - Date.now()
-  S.user = data.user
-  console.log(`[Handshake] serverTimeOffset = ${serverTimeOffset}`, data.user)
-  if (!S.userInfo?.name) S.userInfo = { name: 'User' + S.user.substring(0, 5) }
-  subscribe({ [S.token]: 1 })
-  meta_id = await sha256(await sha256(S.token + 'META_MESSAGE'))
-  query(S.token, { _id: meta_id })
-  query(S.channel, {}) // query current channel
+export const random = sdk.random
+
+const rainbow = {} // invert known hash values
+export const hash = async str => {
+  const res = await sdk.hash(str)
+  rainbow[res] = str
+  return res
 }
 
-async function Message (data) {
+sdk.events.onConnect = () => {
+  if (S.token) sdk.handshake(S.token)
+}
+
+sdk.events.onHandshake = async data => {
+  S.user = data.user
+  if (!S.userInfo?.name) S.userInfo = { name: 'User' + S.user.substring(0, 5) }
+  subscribe({ [S.userKey]: 1 })
+  meta_id = await hash(await hash(S.token + 'META_MESSAGE'))
+  query(S.userKey, { _id: meta_id })
+  if (S.channel) { // current channel
+    query(S.channel, {})
+    subscribe({ [S.channel]: 1 })
+  }
+}
+
+sdk.events.onMessage = async data => {
+  // TODO: decryption
   if (data._id === meta_id) { // meta message
     S.meta = data.msg
     S.userInfo = S.meta.userInfo || {}
@@ -31,8 +45,9 @@ async function Message (data) {
     subscribe(channels)
     return M.refreshChannelList()
   }
-  if (data.channel !== S.channel) {
-    S.channelUnread[data.channel] = 1
+  const channel = rainbow[data.channel]
+  if (channel !== S.channel) {
+    S.channelUnread[channel] = 1
     return M.refreshChannelList()
   }
   for (let i = 0; i < S.messages.length; i++) {
@@ -42,45 +57,28 @@ async function Message (data) {
   S.messages.push(data)
 }
 
-const handlers = { Handshake, Message }
-
-export const connect = () => {
-  ws = new WebSocket(url)
-  ws.onopen = () => { if (S.token) handshake() }
-  // TODO: auto reconnect
-  ws.onclose = () => {}
-  ws.onerror = () => {}
-  ws.onmessage = e => {
-    const data = JSON.parse(e.data)
-    try { handlers[data.type](data) } catch {}
-  }
-}
-
+export const connect = () => sdk.connect(url)
 connect()
 
-export const send = data => {
-  data.time = Math.floor(Date.now() + serverTimeOffset)
-  ws.send(JSON.stringify(data))
+export const handshake = () => sdk.handshake(S.token)
+
+export const subscribe = async chs => {
+  const channel = {}
+  for (const c in chs) channel[await hash(c)] = chs[c]
+  sdk.subscribe(channel)
 }
 
-export const handshake = () => {
-  const startTime = Date.now()
-  send({ type: 'handshake', token: S.token, startTime })
+export const message = async (channel, msg, _id, _random) => {
+  const _channel = await hash(channel)
+  const _msg = msg
+  // TODO: encryption
+  sdk.message(_channel, _msg, _id, _random)
 }
 
-export const subscribe = channel => {
-  send({ type: 'subscribe', channel })
-}
+export const query = async (channel, q) => sdk.query(await hash(channel), q)
 
-export const message = (channel, msg, _id, _random) => {
-  const payload = { type: 'message', channel, msg }
-  if (_id) payload._id = _id
-  else payload.random = _random || random(20)
-  send(payload)
-}
-
-export const query = async (channel, q) => {
-  send({ type: 'query', channel, query: q })
+export const updateMeta = async () => {
+  message(S.userKey, S.meta, undefined, await hash(S.token + 'META_MESSAGE'))
 }
 
 window.query = query

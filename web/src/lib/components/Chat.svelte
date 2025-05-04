@@ -1,9 +1,8 @@
 <script>
   import { onMount } from 'svelte'
   import S from '$lib/S.svelte'
-  import { message } from '$lib/C.js'
+  import { updateMeta } from '$lib/C.js'
   import { debounce } from '$lib/utilities/utils.js'
-  import { sha256 } from '$lib/utilities/crypto.js'
   import Input from '$lib/components/Input.svelte'
   import Message from '$lib/components/Message.svelte'
   import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit, mdiShare } from '@mdi/js'
@@ -21,7 +20,7 @@
     if (button && S.meta?.channels[S.channel]) delete S.meta.channels[S.channel]
     else S.meta.channels[S.channel] = JSON.parse(JSON.stringify(S.channelInfo))
     S.meta.type = 'meta'
-    message(S.token, JSON.parse(JSON.stringify(S.meta)), undefined, await sha256(S.token + 'META_MESSAGE'))
+    updateMeta()
   }
 
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
