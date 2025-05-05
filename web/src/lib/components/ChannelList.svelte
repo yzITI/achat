@@ -16,7 +16,7 @@
   }
 
   function add () {
-    S.channel = random(12)
+    S.channel = random(16)
     S.messages = []
     S.channelInfo = { name: 'New Channel' }
     S.showChannel = false

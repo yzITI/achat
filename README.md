@@ -31,4 +31,5 @@ In this repository, there are some components of AChat:
 
 - [AChat Core](./core): The core service of AChat.
 - [AChat Web](./web): AChat Web client.
+- [AChat SDK](./sdk): AChat SDK.
 

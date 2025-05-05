@@ -1,6 +1,7 @@
 // This interface will transform channelKey into channelID
 // all `channel` exposed by this interface is channelKey
 import { S, M } from '$lib/S.svelte.js'
+import { encrypt, decrypt } from '$lib/utilities/crypto.js'
 import * as sdk from '$lib/../../../sdk/browser.js'
 
 const url = 'https://chat.yzzx.tech/ws'
@@ -32,7 +33,9 @@ sdk.events.onHandshake = async data => {
 }
 
 sdk.events.onMessage = async data => {
-  // TODO: decryption
+  const channel = rainbow[data.channel] // convert channelID to channelKey
+  if (data.msg.type === 'AES-GCM') data.msg = JSON.parse(await decrypt(channel, data.msg.cipher, data.msg.iv))
+  // msg decrypted
   if (data._id === meta_id) { // meta message
     S.meta = data.msg
     S.userInfo = S.meta.userInfo || {}
@@ -45,7 +48,6 @@ sdk.events.onMessage = async data => {
     subscribe(channels)
     return M.refreshChannelList()
   }
-  const channel = rainbow[data.channel]
   if (channel !== S.channel) {
     S.channelUnread[channel] = 1
     return M.refreshChannelList()
@@ -70,8 +72,8 @@ export const subscribe = async chs => {
 
 export const message = async (channel, msg, _id, _random) => {
   const _channel = await hash(channel)
-  const _msg = msg
-  // TODO: encryption
+  const _msg = await encrypt(channel, JSON.stringify(msg))
+  _msg.type = 'AES-GCM'
   sdk.message(_channel, _msg, _id, _random)
 }
 
@@ -81,7 +83,5 @@ export const updateMeta = async () => {
   message(S.userKey, S.meta, undefined, await hash(S.token + 'META_MESSAGE'))
 }
 
-window.query = query
-window.message = message
-window.subscribe = subscribe
+window.AChat = { query, message, connect, handshake, subscribe, updateMeta, random, hash, encrypt, decrypt }
 
