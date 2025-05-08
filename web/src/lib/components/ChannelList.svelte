@@ -43,7 +43,7 @@
     {#each chats as c}
       <button class={'w-full flex items-center p-2 transition-all hover:bg-zinc-600 hover:text-zinc-100 cursor-pointer ' + (S.channel === c ? 'bg-zinc-600 text-zinc-100 ' : 'bg-zinc-700 text-zinc-200 ') + (S.channelUnread[c] ? 'font-bold' : '')} onclick={() => select(c)}>
         <AIcon path={mdiForumOutline} size="1.5rem" />
-        <div class="ml-2 whitespace-nowrap">{S.meta.channels[c].name}</div>
+        <div class="ml-2 whitespace-nowrap">{S.meta?.channels?.[c]?.name}</div>
       </button>
     {/each}
   </div>

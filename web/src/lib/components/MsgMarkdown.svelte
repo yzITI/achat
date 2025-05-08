@@ -6,6 +6,8 @@
   const { msg } = $props()
   let el = $state()
 
+  // TODO: add highlight.js support
+
   function renderInHTMLString (htmlString) {
     let outputString = htmlString
     const replaceLatex = (match, latex, displayMode) => {

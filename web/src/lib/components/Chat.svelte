@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
   import S from '$lib/S.svelte'
   import { updateMeta } from '$lib/C.js'
   import { debounce } from '$lib/utilities/utils.js'
@@ -8,10 +8,8 @@
   import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit, mdiShare } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
-  let chatContainer = $state(), reachBottom = true
-  let top = $state()
-  const observer = new IntersectionObserver(loadMore, { threshold: 1 })
-  onMount(() => { observer.observe(top) })
+  let chatContainer = $state(), chatEl = $state(), reachBottom = true
+  let topEl = $state()
 
   async function updateChannel (button) {
     if (!button && !S.meta?.channels?.[S.channel]) return
@@ -25,10 +23,11 @@
 
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
 
-  function onscroll () {
+  const debouncedCheckBottom = debounce(() => {
     reachBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10
     if (reachBottom) S.channelUnread[S.channel] = 0
-  }
+  }, 300)
+  const onscroll = debouncedCheckBottom
 
   function scrollToBottom () {
     chatContainer.scrollTo({
@@ -38,10 +37,19 @@
     S.channelUnread[S.channel] = 0
   }
   const debouncedScrollToBottom = debounce(scrollToBottom, 100)
+  window.scrollToBottom = scrollToBottom
 
-  $effect(() => {
-    S.messages[S.messages.length - 1]
-    if (reachBottom) debouncedScrollToBottom()
+  const resizeObserver = new ResizeObserver(() => {
+    if (reachBottom) scrollToBottom()
+  })
+  const loadMoreObserver = new IntersectionObserver(loadMore, { threshold: 1 })
+  onMount(() => {
+    resizeObserver.observe(chatEl)
+    loadMoreObserver.observe(topEl)
+  })
+  onDestroy(() => {
+    resizeObserver.disconnect()
+    loadMoreObserver.disconnect()
   })
 
   function share () {
@@ -50,8 +58,10 @@
   }
 
   function loadMore () {
+    console.log('loadMore')
     // TODO: load more messages
   }
+  const debouncedLoadMore = debounce(loadMore, 500)
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
@@ -73,12 +83,14 @@
     </div>
   </div>
   <div class="grow overflow-x-hidden overflow-y-auto" style="scrollbar-color: #666 #222;" bind:this={chatContainer} {onscroll}>
-    <div bind:this={top}></div>
-    {#each S.messages as message}
-      {#key message._id + message.time}
-        <Message {message} />
-      {/key}
-    {/each}
+    <div bind:this={chatEl}>
+      <div bind:this={topEl}></div>
+      {#each S.messages as message}
+        {#key message._id + message.time}
+          <Message {message} />
+        {/key}
+      {/each}
+    </div>
   </div>
   <div>
     <Input />
