@@ -41,11 +41,6 @@
     setTimeout(() => { if (blockOnScroll === now) blockOnScroll = false }, 500)
   }
   const debouncedScrollToBottom = debounce(scrollToBottom, 100)
-  $effect(() => {
-    S.channel;
-    smoothScroll = false
-    setTimeout(() => { smoothScroll = true }, 1000)
-  })
 
   function loadMore () {
     chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
@@ -67,6 +62,12 @@
   onDestroy(() => {
     resizeObserver.disconnect()
     loadMoreObserver.disconnect()
+  })
+  $effect(() => { // channel change
+    S.channel;
+    smoothScroll = false
+    setTimeout(() => { smoothScroll = true }, 1000)
+    throttledLoadMore()
   })
 
   function share () {
