@@ -3,5 +3,5 @@
 </script>
 
 <div style="max-width: 36rem;">
-  <img src={msg.content} alt="image content">
+  <img src={msg.content} alt="content">
 </div>
