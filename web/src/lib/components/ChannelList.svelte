@@ -12,7 +12,6 @@
     S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
     S.showChannel = false
     subscribe({ [c]: 1 })
-    query(c, {})
   }
 
   function add () {

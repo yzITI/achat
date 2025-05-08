@@ -1,8 +1,8 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
   import S from '$lib/S.svelte'
-  import { updateMeta } from '$lib/C.js'
-  import { debounce } from '$lib/utilities/utils.js'
+  import { query, updateMeta } from '$lib/C.js'
+  import { debounce, throttle } from '$lib/utilities/utils.js'
   import Input from '$lib/components/Input.svelte'
   import Message from '$lib/components/Message.svelte'
   import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit, mdiShare } from '@mdi/js'
@@ -20,29 +20,46 @@
     S.meta.type = 'meta'
     updateMeta()
   }
-
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
 
-  const debouncedCheckBottom = debounce(() => {
+  let blockOnScroll = false
+  function onscroll () {
+    if (blockOnScroll) return
     reachBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10
     if (reachBottom) S.channelUnread[S.channel] = 0
-  }, 300)
-  const onscroll = debouncedCheckBottom
+  }
 
+  let smoothScroll = false
   function scrollToBottom () {
+    const now = Date.now()
+    blockOnScroll = now
     chatContainer.scrollTo({
       top: chatContainer.scrollHeight,
-      behavior: (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 400) ? 'smooth' : 'instant'
+      behavior: smoothScroll && (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 400) ? 'smooth' : 'instant'
     })
     S.channelUnread[S.channel] = 0
+    setTimeout(() => { if (blockOnScroll === now) blockOnScroll = false }, 500)
   }
   const debouncedScrollToBottom = debounce(scrollToBottom, 100)
-  window.scrollToBottom = scrollToBottom
+  $effect(() => {
+    S.channel;
+    smoothScroll = false
+    setTimeout(() => { smoothScroll = true }, 1000)
+  })
+
+  function loadMore () {
+    chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
+    query(S.channel, { time: { $lt: S.messages[0]?.time || Date.now() * 2 } })
+  }
+  const throttledLoadMore = throttle(loadMore, 2000)
 
   const resizeObserver = new ResizeObserver(() => {
     if (reachBottom) scrollToBottom()
   })
-  const loadMoreObserver = new IntersectionObserver(loadMore, { threshold: 1 })
+  const loadMoreObserver = new IntersectionObserver(() => {
+    chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
+    throttledLoadMore()
+  }, { threshold: 1 })
   onMount(() => {
     resizeObserver.observe(chatEl)
     loadMoreObserver.observe(topEl)
@@ -56,12 +73,6 @@
     const url = window.location.href.replace(/\?.*$/, '').replace(/#.*$/, '') + '#' + btoa(JSON.stringify({ channel: S.channel, channelInfo: S.channelInfo }))
     navigator.share({ url, title: `AChat | Channel ${S.channelInfo.name}` })
   }
-
-  function loadMore () {
-    console.log('loadMore')
-    // TODO: load more messages
-  }
-  const debouncedLoadMore = debounce(loadMore, 500)
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
@@ -83,8 +94,8 @@
     </div>
   </div>
   <div class="grow overflow-x-hidden overflow-y-auto" style="scrollbar-color: #666 #222;" bind:this={chatContainer} {onscroll}>
-    <div bind:this={chatEl}>
-      <div bind:this={topEl}></div>
+    <div bind:this={chatEl} style="min-height: calc(100% + 40px);">
+      <div bind:this={topEl} style="height: 40px;" class="bg-zinc-700 p-2 font-bold flex items-center">Loading...</div>
       {#each S.messages as message}
         {#key message._id + message.time}
           <Message {message} />

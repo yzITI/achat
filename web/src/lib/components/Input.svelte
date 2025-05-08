@@ -24,6 +24,7 @@
   }
 
   async function messageMarkdown () {
+    if (!content.match(/\S/)) return
     message(S.channel, { type: 'markdown', content, userInfo: S.userInfo }, editing)
     content = ''
     editing = ''
