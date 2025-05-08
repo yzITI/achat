@@ -45,7 +45,7 @@
   })
 
   function share () {
-    const url = window.location.href.replace(/\?.*$/, '') + `?channel=${S.channel}&channelInfo.name=${S.channelInfo.name}`
+    const url = window.location.href.replace(/\?.*$/, '').replace(/#.*$/, '') + '#' + btoa(JSON.stringify({ channel: S.channel, channelInfo: S.channelInfo }))
     navigator.share({ url, title: `AChat | Channel ${S.channelInfo.name}` })
   }
 

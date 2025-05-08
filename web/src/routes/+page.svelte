@@ -1,5 +1,6 @@
 <script>
-  import S from '$lib/S.svelte'
+  import { page } from '$app/state'
+  import { SS, S } from '$lib/S.svelte'
   import '$lib/C.js'
   import PassCode from '$lib/components/PassCode.svelte'
   import Status from '$lib/components/Status.svelte'
@@ -7,12 +8,20 @@
   import Chat from '$lib/components/Chat.svelte'
   import Cover from '$lib/components/Cover.svelte'
   import { fade } from 'svelte/transition'
-  let { data } = $props()
-  if (data.channel) {
-    S.channel = data.channel
-    S.channelInfo = data.channelInfo
+
+  function init () {
+    let data = {}, hashString = page.url.hash.substring(1)
+    if (!hashString) return
+    try { data = JSON.parse(atob(hashString)) } catch {}
+    if (data.channel) {
+      S.channel = data.channel
+      S.channelInfo = data.channelInfo
+    }
+    if (data.userKey) SS.userKey = data.userKey
+    setTimeout(() => window.location.hash = '')
   }
-  if (data.token) S.token = data.token
+  init()
+  window.onhashchange = init
 </script>
 
 <div class="w-full h-dvh overflow-hidden bg-black text-white">

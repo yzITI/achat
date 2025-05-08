@@ -1,18 +1,18 @@
 <script>
   import { AIcon, AExpand } from 'ace.svelte'
   import { mdiLock, mdiArrowRight, mdiHelp } from '@mdi/js'
-  import { S, LS } from '$lib/S.svelte'
+  import { S, SS, LS } from '$lib/S.svelte'
   import { handshake, hash } from '$lib/C.js'
 
   let passcode = $state(''), showHelp = $state(false)
 
   async function login (hs = false) {
-    S.userKey = LS.userKey
+    S.userKey = SS.userKey || LS.userKey
     S.token = await hash(S.userKey)
     if (hs) handshake()
   }
 
-  if (LS.userKey) login() // auto login
+  if (LS.userKey || SS.userKey) login() // auto login
 
   async function enter () {
     LS.userKey = await hash(passcode)
