@@ -52,7 +52,7 @@
     if (reachBottom) scrollToBottom()
   })
   const loadMoreObserver = new IntersectionObserver(() => {
-    chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
+    setTimeout(() => chatContainer.scrollTo({ top: 40, behavior: 'smooth' }))
     throttledLoadMore()
   }, { threshold: 1 })
   onMount(() => {
