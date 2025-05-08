@@ -67,6 +67,7 @@
   })
   $effect(() => { // channel change
     S.channel;
+    reachBottom = true
     smoothScroll = false
     setTimeout(() => { smoothScroll = true }, 1000)
     throttledLoadMore()
