@@ -10,7 +10,8 @@
   const loaders = {
     default: () => import('$lib/components/MsgDefault.svelte'),
     delete: () => import('$lib/components/MsgDelete.svelte'),
-    markdown: () => import('$lib/components/MsgMarkdown.svelte')
+    markdown: () => import('$lib/components/MsgMarkdown.svelte'),
+    image: () => import('$lib/components/MsgImage.svelte')
   }
 
   let Component = $state()
@@ -30,7 +31,7 @@
 
 <div class="p-2 border-t-1 border-zinc-600 text-zinc-200 group relative overflow-hidden">
   <div class="flex items-start">
-    <div class="p-2">
+    <div class="py-2 sm:p-2">
       <Avatar user={message.user} size="2rem" />
     </div>
     <div class="ml-2 grow">
