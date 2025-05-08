@@ -1,7 +1,8 @@
 <script>
   import { page } from '$app/state'
+  import { connect } from '$lib/C.js'
   import { SS, S } from '$lib/S.svelte'
-  import '$lib/C.js'
+  import { throttle } from '$lib/utilities/utils.js'
   import PassCode from '$lib/components/PassCode.svelte'
   import Status from '$lib/components/Status.svelte'
   import ChannelList from '$lib/components/ChannelList.svelte'
@@ -9,17 +10,19 @@
   import Cover from '$lib/components/Cover.svelte'
   import { fade } from 'svelte/transition'
 
-  function init () {
+  const init = throttle(() => {
+    connect()
     let data = {}, hashString = page.url.hash.substring(1)
     if (!hashString) return
     try { data = JSON.parse(atob(hashString)) } catch {}
     if (data.channel) {
       S.channel = data.channel
       S.channelInfo = data.channelInfo
+      S.messages = []
     }
     if (data.userKey) SS.userKey = data.userKey
     setTimeout(() => window.location.hash = '')
-  }
+  }, 1000)
   init()
   window.onhashchange = init
 </script>

@@ -60,7 +60,6 @@ sdk.events.onMessage = async data => {
 }
 
 export const connect = () => sdk.connect(url)
-connect()
 
 export const handshake = () => sdk.handshake(S.token)
 
