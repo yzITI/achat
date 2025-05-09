@@ -4,7 +4,7 @@ import { S, M } from '$lib/S.svelte.js'
 import { encrypt, decrypt } from '$lib/utilities/crypto.js'
 import * as sdk from '$lib/../../../sdk/browser.js'
 
-const url = 'https://chat.yzzx.tech/ws'
+const url = '/ws'
 let meta_id = ''
 
 export const random = sdk.random

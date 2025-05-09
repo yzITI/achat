@@ -9,7 +9,7 @@ export function random (l) {
 }
 export const hash = str => window.crypto.subtle.digest('SHA-256', enc.encode(str + SALT)).then(HEX)
 
-const url = 'https://chat.yzzx.tech/ws'
+const url = '/ws'
 
 let ws = null, serverTimeOffset = 0
 
