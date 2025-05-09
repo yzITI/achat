@@ -1,7 +1,7 @@
 <script>
   import { S, M } from '$lib/S.svelte'
   import { query, subscribe } from '$lib/C.js'
-  import { mdiForumOutline, mdiPlus } from '@mdi/js'
+  import { mdiForumOutline, mdiPlus, mdiHomeAccount } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
   import { random } from '$lib/C.js'
 
@@ -34,6 +34,9 @@
     <div class="font-bold m-2 flex items-center justify-between">
       <h3>Channels</h3>
       <div class="flex items-center">
+        <button class="transition-all cursor-pointer opacity-80 hover:opacity-100 mr-1" onclick={() => S.channel = ''}>
+          <AIcon path={mdiHomeAccount}></AIcon>
+        </button>
         <button class="transition-all cursor-pointer hover:rotate-360" onclick={add}>
           <AIcon path={mdiPlus}></AIcon>
         </button>
