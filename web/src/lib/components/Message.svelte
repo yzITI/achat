@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="w-full">
-        <Component msg={message.msg} />
+        <Component msg={message.msg} _id={message._id} />
       </div>
     </div>
   </div>

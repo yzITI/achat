@@ -2,11 +2,11 @@
   import { marked } from 'marked'
   import katex from 'katex'
   import 'katex/dist/katex.min.css'
+  import hljs from 'highlight.js'
+  import 'highlight.js/styles/monokai-sublime.css'
   import DOMPurify from 'dompurify'
-  const { msg } = $props()
+  const { msg, _id } = $props()
   let el = $state()
-
-  // TODO: add highlight.js support
 
   function renderInHTMLString (htmlString) {
     let outputString = htmlString
@@ -25,11 +25,15 @@
   function parse () {
     let raw = marked.parse(msg.content, { breaks: true })
     raw = renderInHTMLString(raw)
+    setTimeout(() => {
+      const els = document.querySelectorAll(`div[_id='${_id}'] pre code`)
+      for (const e of els) hljs.highlightElement(e)
+    })
     return DOMPurify.sanitize(raw)
   }
   const html = parse()
 </script>
 
-<div class="w-full prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400" bind:this={el} style="max-width: 100%;">
+<div class="w-full prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400 prose-pre:p-0" bind:this={el} style="max-width: 100%;" {_id}>
   {@html html}
 </div>
