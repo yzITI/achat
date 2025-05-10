@@ -34,7 +34,7 @@
     <div class="font-bold m-2 flex items-center justify-between">
       <h3>Channels</h3>
       <div class="flex items-center">
-        <button class="transition-all cursor-pointer opacity-80 hover:opacity-100 mr-1" onclick={() => S.channel = ''}>
+        <button class="transition-all cursor-pointer opacity-80 hover:opacity-100 mr-1" onclick={() => { S.channel = ''; S.showChannel = false; } }>
           <AIcon path={mdiHomeAccount}></AIcon>
         </button>
         <button class="transition-all cursor-pointer hover:rotate-360" onclick={add}>
