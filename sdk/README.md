@@ -2,9 +2,11 @@
 
 The SDK is only responsible for basic communication. Cryptography, meta-information, and other personalized features are up to clients.
 
-## Browser
+One implementation is from the [web client](../web/src/lib/C.js), where the browser SDK is further abstracted to integrate E2E encryption and other features.
 
-> `browser.js`
+## API
+
+APIs are the same for both browser and node.js.
 
 ```js
 import { events, connect, handshake, subscribe, message, query, hash } from './browser.js'

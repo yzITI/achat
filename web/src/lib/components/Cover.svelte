@@ -2,6 +2,10 @@
   import S from '$lib/S.svelte'
   import { mdiMenu } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
+  async function init () {
+    import('$lib/components/MsgMarkdown.svelte') // preload large component
+  }
+  init()
 </script>
 
 <div class="w-full h-full flex flex-col" style="background: #222;">
