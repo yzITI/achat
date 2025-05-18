@@ -3,7 +3,7 @@ import { sha256 } from './crypto.js'
 
 export default async function (req, res) {
   if (req.method !== 'POST') {
-    res.writeHead(405)
+    res.writeHead(405, { ContentType: 'text/plain' })
     res.end('Method Not Allowed')
     return
   }
@@ -13,11 +13,11 @@ export default async function (req, res) {
     req.on('end', () => { resolve(JSON.parse(body)) })
   })
   if (!data.token || !data.channel) {
-    res.writeHead(400)
+    res.writeHead(400, { ContentType: 'text/plain' })
     res.end('Bad Request')
     return
   }
   await message(sha256(data.token), data)
-  res.writeHead(200)
+  res.writeHead(200, { ContentType: 'text/plain' })
   res.end('OK')
 }
