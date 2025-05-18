@@ -28,7 +28,7 @@ handler.message = async (s, data) => {
   }
   // new message
   const _id = sha256(data.random)
-  const message = { channel: data.channel, user: comet.session[s].user, created: Date.now(), time: Date.now(), msg: data.msg }
+  const message = { channel: data.channel, user: comet.session[s].user, created: Date.now(), time: Date.now(), expire: data.expire, msg: data.msg }
   await M.put({ _id }, message)
   comet.broadcast(data.channel, { type: 'Message', _id, ...message })
 }

@@ -51,3 +51,7 @@ export const model = col => {
 export const M = model('message')
 
 export default model
+
+setInterval(() => {
+  M.del({ expire: { $exists: true, $lt: Date.now() } })
+}, 5e3)
