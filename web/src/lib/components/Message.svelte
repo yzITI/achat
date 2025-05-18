@@ -48,7 +48,11 @@
         </div>
       </div>
       <div class="w-full">
-        <Component msg={message.msg} _id={message._id} />
+        {#if Component}
+          <Component msg={message.msg} _id={message._id} />
+        {:else}
+          <p class="text-zinc-500">Loading...</p>
+        {/if}
       </div>
     </div>
   </div>

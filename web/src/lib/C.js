@@ -83,7 +83,8 @@ export const updateMeta = async () => {
 }
 
 window.AChat = { query, message, connect, handshake, subscribe, updateMeta, random, hash, encrypt, decrypt }
-window.AChat.show = async () => {
+window.AChat.credentials = async () => {
+  await new Promise(r => setTimeout(r))
   console.log('The following information are credentials. Do not share them with anyone!')
   console.log('User:', S.user)
   console.log('Token:', S.token)

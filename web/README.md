@@ -22,6 +22,22 @@ passcode -> userKey -> token -> userID
 
 AChat Web use AES as E2E encryption algorithm. For any non-special channel, the channelID will be the hash of the AES key.
 
+## Msg Model
+
+### Encrypted Message
+
+Normal message is encrypted with AES.
+
+```js
+msg {
+  type: 'AES-GCM',
+  cipher: String, // base64 encoded
+  iv: String // base64 encoded
+}
+```
+
+> By decryption, the decrypted message will replace the encrypted messages.
+
 ### Meta Message
 
 Meta information of user is stored in self-channel (the channel with token as channelID). The message random is hash of `token + 'META_MESSAGE'`, which gives the message _id as the hash of random.

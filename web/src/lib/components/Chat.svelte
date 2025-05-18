@@ -46,7 +46,7 @@
     chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
     query(S.channel, { time: { $lt: S.messages[0]?.time || Date.now() * 2 } })
   }
-  const throttledLoadMore = throttle(loadMore, 2000)
+  const throttledLoadMore = throttle(loadMore, 1000)
 
   const resizeObserver = new ResizeObserver(() => {
     if (reachBottom) scrollToBottom()
@@ -101,9 +101,11 @@
     <div bind:this={chatEl} style="min-height: calc(100% + 40px);">
       <div bind:this={topEl} style="height: 40px;" class="bg-zinc-700 p-2 font-bold flex items-center">Loading...</div>
       {#each S.messages as message}
-        {#key message._id + message.time}
-          <Message {message} />
-        {/key}
+        {#if !message.msg?.hide}
+          {#key message._id + message.time}
+            <Message {message} />
+          {/key}
+        {/if}
       {/each}
     </div>
   </div>
