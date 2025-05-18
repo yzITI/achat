@@ -83,4 +83,12 @@ export const updateMeta = async () => {
 }
 
 window.AChat = { query, message, connect, handshake, subscribe, updateMeta, random, hash, encrypt, decrypt }
+window.AChat.show = async () => {
+  console.log('The following information are credentials. Do not share them with anyone!')
+  console.log('User:', S.user)
+  console.log('Token:', S.token)
+  console.log('UserKey:', S.userKey)
+  console.log('Channel(Key):', S.channel)
+  console.log('Channel(ID):', await hash(S.channel))
+}
 

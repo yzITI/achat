@@ -1,6 +1,6 @@
 import { M } from './model.js'
 import comet from './comet.js'
-import { sha256 } from './crypto.js'
+import { sha256, random } from './crypto.js'
 
 const handler = {}
 
@@ -27,7 +27,7 @@ handler.message = async (s, data) => {
     return
   }
   // new message
-  const _id = sha256(data.random)
+  const _id = sha256(data.random || random(16))
   const message = { channel: data.channel, user: comet.session[s].user, created: Date.now(), time: Date.now(), expire: data.expire, msg: data.msg }
   await M.put({ _id }, message)
   comet.broadcast(data.channel, { type: 'Message', _id, ...message })

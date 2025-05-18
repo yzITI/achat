@@ -45,3 +45,18 @@ data = {
 - `Handshake`: `user, startTime, serverTime`
 - `Message`: `_id, channel, user, msg, created, time`
 
+### HTTP Interface
+
+AChat Core also provide HTTP interface, but it is only limited to send messages. This is primarily used as webhook for other services. The HTTP interface only supports `POST` method with `application/json` content type.
+
+```js
+body {
+  token: String, // required, user token
+  channel: String, // required, channel id
+  _id: String, // optional, message _id, for editing message
+  random: String, // optional, message random, for new message
+  msg: Object, // message
+  expire: Number, // optional, message expire time in timestamp
+}
+```
+
