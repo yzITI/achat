@@ -2,7 +2,6 @@
   import { marked } from 'marked'
   import katex from 'katex'
   import 'katex/dist/katex.min.css'
-  import hljs from 'highlight.js'
   import 'highlight.js/styles/monokai-sublime.css'
   import DOMPurify from 'dompurify'
   const { msg, _id } = $props()
@@ -25,8 +24,9 @@
   function parse () {
     let raw = marked.parse(msg.content, { breaks: true })
     raw = renderInHTMLString(raw)
-    setTimeout(() => {
+    setTimeout(async () => {
       const els = document.querySelectorAll(`div[_id='${_id}'] pre code`)
+      const hljs = await import('highlight.js').then(m => m.default)
       for (const e of els) hljs.highlightElement(e)
     })
     return DOMPurify.sanitize(raw)
