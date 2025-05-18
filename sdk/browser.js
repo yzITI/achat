@@ -54,8 +54,8 @@ export const subscribe = channel => {
   send({ type: 'subscribe', channel })
 }
 
-export const message = (channel, msg, _id = undefined, _random = undefined) => {
-  const payload = { type: 'message', channel, msg }
+export const message = (channel, msg, _id = undefined, _random = undefined, expire = undefined) => {
+  const payload = { type: 'message', channel, expire, msg }
   if (_id) payload._id = _id
   else payload.random = _random || random(20)
   send(payload)
