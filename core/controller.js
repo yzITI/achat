@@ -15,11 +15,12 @@ handler.subscribe = async (s, data) => {
   comet.subscribe(s, data.channel || {})
 }
 
-handler.message = async (s, data) => {
-  if (!comet.session[s].user) return
+// wrap message function for both ws and http
+export const message = async (user, data) => {
+  if (!user) return
   if (data._id) { // edit message
     const m = await M.get({ _id: data._id, channel: data.channel })
-    if (!m || m.user !== comet.session[s].user) return
+    if (!m || m.user !== user) return
     m.time = Date.now()
     m.msg = data.msg
     await M.put({ _id: data._id }, m)
@@ -28,10 +29,12 @@ handler.message = async (s, data) => {
   }
   // new message
   const _id = sha256(data.random || random(16))
-  const message = { channel: data.channel, user: comet.session[s].user, created: Date.now(), time: Date.now(), expire: data.expire, msg: data.msg }
+  const message = { channel: data.channel, user, created: Date.now(), time: Date.now(), expire: data.expire, msg: data.msg }
   await M.put({ _id }, message)
   comet.broadcast(data.channel, { type: 'Message', _id, ...message })
 }
+
+handler.message = (s, data) => message(comet.session[s].user, data)
 
 handler.query = async (s, data) => {
   if (!comet.session[s].user) return
