@@ -34,6 +34,14 @@
   const html = parse()
 </script>
 
-<div class="w-full prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400 prose-pre:p-0" bind:this={el} style="max-width: 100%;" {_id}>
+<div class="w-full prose prose-zinc prose-invert prose-blockquote:border-zinc-400 prose-li:marker:text-zinc-400 prose-pre:p-0 prose-pre:m-0 wrap-anywhere" bind:this={el} style="max-width: 100%;" {_id}>
   {@html html}
 </div>
+
+<style>
+:global(pre code.hljs) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 0;
+}
+</style>
