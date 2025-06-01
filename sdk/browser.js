@@ -29,7 +29,6 @@ const handlers = {
 }
 
 export const connect = url => {
-  console.log('connecting')
   if (ws?.readyState === 1) ws.close()
   ws = new WebSocket(url)
   ws.onopen = events.onConnect
