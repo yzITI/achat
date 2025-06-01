@@ -26,11 +26,15 @@ const handlers = {
 }
 
 export const connect = url => {
+  if (ws?.readyState === 1) ws.close()
   ws = new WebSocket(url)
   ws.onopen = events.onConnect
-  // TODO: auto reconnect
-  ws.onclose = () => {}
-  ws.onerror = () => {}
+  ws.onclose = ws.onerror = () => {
+    events.onDisconnect()
+    setTimeout(() => {
+      if (ws.readyState > 1) connect(url)
+    }, 5e3)
+  }
   ws.onmessage = e => {
     const data = JSON.parse(e.data)
     try { handlers[data.type](data) } catch {}

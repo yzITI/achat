@@ -20,6 +20,10 @@ sdk.events.onConnect = () => {
   if (S.token) sdk.handshake(S.token)
 }
 
+sdk.events.onDisconnect = () => {
+  S.user = ''
+}
+
 sdk.events.onHandshake = async data => {
   S.user = data.user
   if (!S.userInfo?.name) S.userInfo = { name: 'User' + S.user.substring(0, 5) }
@@ -59,7 +63,10 @@ sdk.events.onMessage = async data => {
   S.messages.push(data)
 }
 
-export const connect = () => sdk.connect(url)
+export const connect = () => {
+  S.user = ''
+  sdk.connect(url)
+}
 
 export const handshake = () => sdk.handshake(S.token)
 

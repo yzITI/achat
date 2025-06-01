@@ -1,16 +1,16 @@
 <script>
   import { S, M } from '$lib/S.svelte'
-  import { query, subscribe } from '$lib/C.js'
+  import { subscribe } from '$lib/C.js'
   import { mdiForumOutline, mdiPlus, mdiHomeAccount } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
   import { random } from '$lib/C.js'
 
   function select (c) {
+    S.showChannel = false
     if (S.channel === c) return
     S.channel = c
     S.messages = []
     S.channelInfo = JSON.parse(JSON.stringify(S.meta?.channels?.[c] || {}))
-    S.showChannel = false
     subscribe({ [c]: 1 })
   }
 

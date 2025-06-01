@@ -44,7 +44,7 @@
 
   function loadMore () {
     chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
-    query(S.channel, { time: { $lt: S.messages[0]?.time || Date.now() * 2 } })
+    if (S.user) query(S.channel, { time: { $lt: S.messages[0]?.time || Date.now() * 2 } })
   }
   const throttledLoadMore = throttle(loadMore, 1000)
 
