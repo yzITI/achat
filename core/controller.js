@@ -30,7 +30,7 @@ export const message = async (user, data) => {
   // new message
   const _id = sha256(data.random || random(16))
   const message = { channel: data.channel, user, created: Date.now(), time: Date.now(), expire: data.expire, msg: data.msg }
-  await M.put({ _id }, message)
+  if (!message.expire || message.expire > Date.now()) await M.put({ _id }, message)
   comet.broadcast(data.channel, { type: 'Message', _id, ...message })
 }
 
