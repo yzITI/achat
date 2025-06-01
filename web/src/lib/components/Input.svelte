@@ -2,8 +2,8 @@
   import { S, M } from '$lib/S.svelte'
   import { message } from '$lib/C.js'
   import { AIcon } from 'ace.svelte'
-  import { mdiSend, mdiPencilOff, mdiImage } from '@mdi/js'
-  let content = $state(''), textareaEl = $state(), editing = $state('')
+  import { mdiSend, mdiPencilOff, mdiImage, mdiIncognito } from '@mdi/js'
+  let content = $state(''), textareaEl = $state(), editing = $state(''), incognito = $state(false)
   let rows = $derived(Math.min(5, content.split('\n').length))
   let imageInputEl = $state()
 
@@ -25,7 +25,7 @@
 
   async function messageMarkdown () {
     if (!content.match(/\S/)) return
-    message(S.channel, { type: 'markdown', content, userInfo: S.userInfo }, editing)
+    message(S.channel, { type: 'markdown', content, userInfo: S.userInfo }, editing, undefined, incognito ? 1 : undefined)
     content = ''
     editing = ''
   }
@@ -55,7 +55,7 @@
 
   async function messageImage (f) {
     const content = await file2DataURL(f)
-    message(S.channel, { type: 'image', content, userInfo: S.userInfo }, editing)
+    message(S.channel, { type: 'image', content, userInfo: S.userInfo }, editing, undefined, incognito ? 1 : undefined)
   }
 
   async function imageInput () {
@@ -76,17 +76,21 @@
     <textarea class="group w-full outline-none p-3" rows={rows} style="resize: none;" placeholder="Send Message" bind:value={content} {oninput} {onkeydown} {onpaste} bind:this={textareaEl}></textarea>
     <div class="bg-zinc-600 flex items-center justify-between">
       <div>
-        <button class="text-zinc-200 p-1 m-1 cursor-pointer" onclick={() => { imageInputEl.click() }}>
+        <button class="text-zinc-200 p-1 m-1 cursor-pointer" onclick={() => { imageInputEl.click() }} title="Upload Image">
           <AIcon path={mdiImage} size="1.25rem"></AIcon>
         </button>
       </div>
       <div class="flex items-center">
         {#if editing}
-          <button class="text-xs text-zinc-300 mr-2 cursor-pointer" onclick={() => editing = content = ''}>
+          <button class="text-xs text-zinc-300 mr-2 cursor-pointer" onclick={() => editing = content = ''} title="Cancel Editing">
             <AIcon path={mdiPencilOff} size="1.25rem" />
           </button>
+        {:else}
+          <button class="text-xs transition-all mr-2 cursor-pointer {incognito ? 'text-blue-300' : 'text-zinc-300'}" onclick={() => incognito = !incognito} title="Incognito">
+            <AIcon path={mdiIncognito} size="1.25rem" />
+          </button>
         {/if}
-        <button class={'rounded text-white p-1 cursor-pointer m-1 transition-all ' + (content.match(/\S/) ? 'bg-blue-500' : 'bg-zinc-600')} onclick={messageMarkdown}>
+        <button class={'rounded text-white p-1 cursor-pointer m-1 transition-all ' + (content.match(/\S/) ? 'bg-blue-500' : 'bg-zinc-600')} onclick={messageMarkdown} title="Send">
           <AIcon path={mdiSend} size="1.25rem" />
         </button>
       </div>

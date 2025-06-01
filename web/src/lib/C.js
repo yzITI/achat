@@ -69,11 +69,11 @@ export const subscribe = async chs => {
   sdk.subscribe(channel)
 }
 
-export const message = async (channel, msg, _id, _random) => {
+export const message = async (channel, msg, _id, _random, expire) => {
   const _channel = await hash(channel)
   const _msg = await encrypt(channel, JSON.stringify(msg))
   _msg.type = 'AES-GCM'
-  sdk.message(_channel, _msg, _id, _random)
+  sdk.message(_channel, _msg, _id, _random, expire)
 }
 
 export const query = async (channel, q) => sdk.query(await hash(channel), q)
