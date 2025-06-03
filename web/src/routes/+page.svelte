@@ -24,7 +24,7 @@
     }
     if (data.userKey) SS.userKey = data.userKey
     if (data.autoKey) SS.userKey = SS.userKey || LS.userKey || random(16)
-    if (SS.userKey !== LS.userKey) handler.login()
+    if (SS.userKey !== LS.userKey && handler.login) handler.login()
     setTimeout(() => window.location.hash = '')
   }, 1000)
   init()
