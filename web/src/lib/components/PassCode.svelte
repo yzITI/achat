@@ -4,6 +4,8 @@
   import { S, SS, LS } from '$lib/S.svelte'
   import { handshake, hash } from '$lib/C.js'
 
+  const { handler } = $props()
+
   let passcode = $state(''), showHelp = $state(false)
 
   async function login (hs = false) {
@@ -13,6 +15,7 @@
   }
 
   if (LS.userKey || SS.userKey) login() // auto login
+  handler.login = login
 
   async function enter () {
     LS.userKey = await hash(passcode)

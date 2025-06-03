@@ -1,6 +1,6 @@
 <script>
   import Avatar from '$lib/components/Avatar.svelte'
-  import { S, LS } from '$lib/S.svelte'
+  import { S, LS, SS } from '$lib/S.svelte'
   import { connect, updateMeta } from '$lib/C.js'
   import { debounce } from '$lib/utilities/utils.js'
   import { mdiLogout } from '@mdi/js'
@@ -8,13 +8,17 @@
 
   function logout() {
     LS.removeItem('userKey')
-    S.userKey = S.token = S.user = S.channel = ''
+    SS.removeItem('userKey')
+    S.userKey = ''
+    S.token = ''
+    S.user = ''
+    S.channel = ''
     S.userInfo = {}
     S.channelInfo = {}
     S.messages = []
     S.meta = {}
     S.channelUnread = {}
-    connect() // reconnect server
+    setTimeout(() => { connect() }) // reconnect server
   }
 
   async function updateUserInfo () {

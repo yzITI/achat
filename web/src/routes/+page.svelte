@@ -1,7 +1,7 @@
 <script>
   import { page } from '$app/state'
-  import { connect } from '$lib/C.js'
-  import { SS, S } from '$lib/S.svelte'
+  import { connect, random } from '$lib/C.js'
+  import { SS, LS, S } from '$lib/S.svelte'
   import { throttle } from '$lib/utilities/utils.js'
   import PassCode from '$lib/components/PassCode.svelte'
   import Status from '$lib/components/Status.svelte'
@@ -9,6 +9,8 @@
   import Chat from '$lib/components/Chat.svelte'
   import Cover from '$lib/components/Cover.svelte'
   import { fade } from 'svelte/transition'
+
+  const handler = {}
 
   const init = throttle(() => {
     connect()
@@ -21,6 +23,8 @@
       S.messages = []
     }
     if (data.userKey) SS.userKey = data.userKey
+    if (data.autoKey) SS.userKey = SS.userKey || LS.userKey || random(16)
+    if (SS.userKey !== LS.userKey) handler.login()
     setTimeout(() => window.location.hash = '')
   }, 1000)
   init()
@@ -30,7 +34,7 @@
 <div class="w-full h-dvh overflow-hidden bg-black text-white">
   {#if !S.token}
     <div transition:fade class="fixed w-full h-full top-0 left-0 z-50">
-      <PassCode />
+      <PassCode {handler} />
     </div>
   {/if}
   <div class="flex h-full">
