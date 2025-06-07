@@ -8,7 +8,7 @@
   import { mdiMenu, mdiForumOutline, mdiLocationEnter, mdiLocationExit, mdiShare } from '@mdi/js'
   import { AIcon } from 'ace.svelte'
 
-  let chatContainer = $state(), chatEl = $state(), reachBottom = true
+  let chatContainer = $state(), chatEl = $state()
   let topEl = $state()
 
   async function updateChannel (button) {
@@ -22,40 +22,41 @@
   }
   const debouncedUpdateChannel = debounce(updateChannel, 1000)
 
-  let blockOnScroll = false
-  function onscroll () {
-    if (blockOnScroll) return
-    reachBottom = chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 10
-    if (reachBottom) S.channelUnread[S.channel] = 0
+  let scrollHeight = 0, scrolling = 0, smoothScroll = false
+  function onscroll (e) {
+    if (scrolling) return
+    scrollHeight = chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop
+    if (scrollHeight < 10) S.channelUnread[S.channel] = 0
   }
-
-  let smoothScroll = false
-  function scrollToBottom () {
-    const now = Date.now()
-    blockOnScroll = now
-    chatContainer.scrollTo({
-      top: chatContainer.scrollHeight,
-      behavior: smoothScroll && (chatContainer.scrollTop + chatContainer.clientHeight >= chatContainer.scrollHeight - 400) ? 'smooth' : 'instant'
-    })
-    S.channelUnread[S.channel] = 0
-    setTimeout(() => { if (blockOnScroll === now) blockOnScroll = false }, 500)
+  function scrollTo (top) {
+    scrolling++
+    const smooth = smoothScroll && Math.abs(chatContainer.scrollTop - top) < 400
+    chatContainer.scrollTo({ top, behavior: smoothScroll ? 'smooth' : 'instant' })
+    setTimeout(() => {
+      scrolling--
+      onscroll()
+    }, smoothScroll ? 600 : 100)
   }
-  const debouncedScrollToBottom = debounce(scrollToBottom, 100)
 
   function loadMore () {
-    chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
     if (S.user) query(S.channel, { time: { $lt: S.messages[0]?.time || Date.now() * 2 } })
   }
-  const throttledLoadMore = throttle(loadMore, 1000)
+  const throttledLoadMore = throttle(loadMore, 500)
 
-  const resizeObserver = new ResizeObserver(() => {
-    if (reachBottom) scrollToBottom()
+  const resizeObserver = new ResizeObserver(e => {
+    scrolling++ // block onscroll event
+    requestAnimationFrame(() => {
+      scrolling--
+      scrollTo(chatContainer.scrollHeight - chatContainer.clientHeight - scrollHeight)
+    })
   })
   const loadMoreObserver = new IntersectionObserver(() => {
-    setTimeout(() => {
-      if (!reachBottom) chatContainer.scrollTo({ top: 40, behavior: 'smooth' })
-    }, 300)
+    smoothScroll = false
     throttledLoadMore()
+    setTimeout(() => {
+      smoothScroll = true
+      if (chatContainer.scrollTop < 40) scrollTo(40)
+    }, 1000)
   }, { threshold: 1 })
   onMount(() => {
     resizeObserver.observe(chatEl)
@@ -67,7 +68,7 @@
   })
   $effect(() => { // channel change
     S.channel;
-    reachBottom = true
+    scrollHeight = 0
     smoothScroll = false
     setTimeout(() => { smoothScroll = true }, 1000)
     throttledLoadMore()
