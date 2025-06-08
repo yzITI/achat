@@ -44,11 +44,7 @@
   const throttledLoadMore = throttle(loadMore, 500)
 
   const resizeObserver = new ResizeObserver(e => {
-    scrolling++ // block onscroll event
-    requestAnimationFrame(() => {
-      scrolling--
-      scrollTo(chatContainer.scrollHeight - chatContainer.clientHeight - scrollHeight)
-    })
+    scrollTo(chatContainer.scrollHeight - chatContainer.clientHeight - scrollHeight)
   })
   const loadMoreObserver = new IntersectionObserver(() => {
     smoothScroll = false
@@ -56,7 +52,7 @@
     setTimeout(() => {
       smoothScroll = true
       if (chatContainer.scrollTop < 40) scrollTo(40)
-    }, 1000)
+    }, 500)
   }, { threshold: 1 })
   onMount(() => {
     resizeObserver.observe(chatEl)
